@@ -91,7 +91,7 @@ module.exports = exports = function(index, callback) {
         external = el.attr('src');
 
     if (external) {
-      window.loadInContext(external);
+      window.loadInContext(external.replace(/\.js$/, '-server.js'));
     } else {
       exec(function() {
         vm.runInContext(text, window, text);
