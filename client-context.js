@@ -72,7 +72,12 @@ module.exports = exports = function(index, callback) {
     }
 
     // Inline any script content that we may have received
-    $.$('script').eq(0).before('<script>var $serverCache = ' + $.ajax.toJSON() + ';</script>');
+    $.$('body').append('<script>var $serverCache = ' + $.ajax.toJSON() + ';</script>');
+
+    // Ensure sure that we have all of our script content and that it it at the end of the document
+    // this has two benefits: the body element may be rendered to directly and this will push
+    // all of the scripts after the content elements
+    $.$('body').append(files);
 
     // And output the thing
     callback(undefined, $.root.html());
