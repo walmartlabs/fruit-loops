@@ -1,4 +1,5 @@
-var Cheerio = require('cheerio');
+var _ = require('underscore'),
+    Cheerio = require('cheerio');
 
 var $make = Cheerio.prototype.make;
 
@@ -36,7 +37,24 @@ Cheerio.prototype.val = function(value) {
 };
 
 Cheerio.prototype.css = function(name, value) {
-  // TODO : Implement
+  /*jshint eqnull: true */
+  var styles = {};
+  (this.attr('style') || '').split(/\s*;\s*/g).forEach(function(style) {
+    var components = style.split(':');
+    if (!components[0]) {
+      return;
+    }
+
+    styles[components[0]] = (components[1] || '').replace(/;\s*$/, '');
+  });
+
+  if (value != null) {
+    styles[name] = value;
+
+    this.attr('style', _.map(styles, function(value, key) { return value ? (key + ':' + value + ';') : ''; }).join(''));
+  } else {
+    return styles[name];
+  }
 };
 Cheerio.prototype.toggle = function(toggle) {
   if (toggle === undefined) {
