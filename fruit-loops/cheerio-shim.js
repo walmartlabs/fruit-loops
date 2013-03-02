@@ -65,11 +65,11 @@ Cheerio.prototype.toggle = function(toggle) {
   return this;
 };
 Cheerio.prototype.show = function() {
-  this.css('display', 'none');
+  this.css('display', '');
   return this;
 };
 Cheerio.prototype.hide = function() {
-  this.css('display', '');
+  this.css('display', 'none');
   return this;
 };
 Cheerio.prototype.toggleClass = function(className, toggle) {
