@@ -54,6 +54,7 @@ module.exports = exports = function(index, callback) {
   dom.console(window);
   dom.document(window);
   dom.location(window, 'http://localhost:8080/home/register/1234');
+  dom.history(window);
 
   var $ = jQuery(window, fs.readFileSync(index));
   window.jQuery = window.Zepto = window.$ = $.$;
