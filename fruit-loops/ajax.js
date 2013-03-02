@@ -15,7 +15,6 @@ module.exports = function($) {
   };
 
   $.ajax = function(options) {
-    console.log(options.url);
     log[options.url] = null;
     request({
         method: options.type || 'GET',
@@ -36,7 +35,6 @@ module.exports = function($) {
 
               options.success(body, 'success', {});
             } else {
-              console.log(err, response, body);
               options.error({}, 'error', err);
             }
           } finally {
