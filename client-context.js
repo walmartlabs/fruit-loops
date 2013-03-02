@@ -5,7 +5,9 @@ var dom = require('./dom'),
     path = require('path'),
     vm = require('vm');
 
-module.exports = exports = function(index, callback) {
+module.exports = exports = function(options) {
+  var callback = options.callback;
+
   var window = vm.createContext({
     $server: true,
     nextTick: function(callback) {
@@ -27,8 +29,9 @@ module.exports = exports = function(index, callback) {
 
     loadInContext: function(href, callback) {
       if (href && window.lumbarLoadPrefix) {
-        href = path.relative(window.lumbarLoadPrefix, href);
-        href = path.resolve(path.dirname(index) + '/web', href);
+        // TODO : Make this more generic (i.e. don't expect a sha in there)
+        href = path.relative(path.dirname(window.lumbarLoadPrefix), href);
+        href = path.resolve(path.dirname(options.index) + '/web', href);
       }
 
       exec(function() {
@@ -56,7 +59,7 @@ module.exports = exports = function(index, callback) {
   dom.location(window, 'http://localhost:8080/home/register/1234');
   dom.history(window);
 
-  var $ = jQuery(window, fs.readFileSync(index));
+  var $ = jQuery(window, fs.readFileSync(options.index));
   window.jQuery = window.Zepto = window.$ = $.$;
 
   var changeRegistered,
