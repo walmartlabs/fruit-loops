@@ -5,7 +5,7 @@ var dom = require('./dom'),
     path = require('path'),
     vm = require('vm');
 
-module.exports = exports = function(index) {
+module.exports = exports = function(index, callback) {
   var window = vm.createContext({
     $server: true,
     nextTick: function(callback) {
@@ -74,7 +74,7 @@ module.exports = exports = function(index) {
     $.$('script').eq(0).before('<script>var $serverCache = ' + $.ajax.toJSON() + ';</script>');
 
     // And output the thing
-    console.log($.root.html());
+    callback(undefined, $.root.html());
   }
   $.ajax.on('complete', emit);
 
@@ -91,5 +91,5 @@ module.exports = exports = function(index) {
         vm.runInContext(text, window, text);
       });
     }
-  }, this);
+  });
 };
