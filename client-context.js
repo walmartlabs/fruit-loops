@@ -6,7 +6,8 @@ var dom = require('./dom'),
     vm = require('vm');
 
 module.exports = exports = function(options) {
-  var callback = options.callback;
+  var host = options.host || 'localhost',
+      callback = options.callback;
 
   var window = vm.createContext({
     $server: true,
@@ -56,7 +57,7 @@ module.exports = exports = function(options) {
 
   dom.console(window);
   dom.document(window);
-  dom.location(window, 'http://localhost:8080/home/register/1234');
+  dom.location(window, 'http://' + host + options.url.path);
   dom.history(window);
 
   var $ = jQuery(window, fs.readFileSync(options.index));
