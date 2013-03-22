@@ -60,6 +60,11 @@ module.exports = exports = function(options) {
       viewSet = false;
 
   function emit() {
+    // TODO : Figure put the best way to handle output after send... Error? Ignore? Log?
+    if (!callback) {
+      console.log($.root.html());
+      return;
+    }
     // TODO : Detect the error page and handle appropriately
     // TODO : Reconsider the loading flag for the loading state (vs. active ajax).
     //      If we do that then we will need to provide an opt out mechanism.
