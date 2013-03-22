@@ -19,15 +19,6 @@ module.exports = exports = function(options) {
       userAgent: options.userAgent
     },
 
-    sessionStorage: {
-      getItem: function() {
-      }
-    },
-    localStorage: {
-      getItem: function() {
-      }
-    },
-
     loadInContext: function(href, callback) {
       if (href && window.lumbarLoadPrefix) {
         // TODO : Make this more generic (i.e. don't expect a sha in there)
@@ -59,6 +50,8 @@ module.exports = exports = function(options) {
   dom.document(window);
   dom.location(window, 'http://' + host + options.url.path);
   dom.history(window);
+  dom.storage(window, 'localStorage');
+  dom.storage(window, 'sessionStorage');
 
   var $ = jQuery(window, fs.readFileSync(options.index));
   window.jQuery = window.Zepto = window.$ = $.$;
