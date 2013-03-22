@@ -20,7 +20,7 @@ module.exports = exports = function(window, html) {
     return root(selector, context);
   }
 
-  $.trim = function(str) { str.trim(); };
+  $.trim = function(str) { return str.trim(); };
 
   detect($, window);
 
