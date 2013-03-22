@@ -40,7 +40,11 @@ module.exports = function($) {
           } finally {
             options.complete();
 
-            log[options.url] = body || false;
+            log[options.cacheUrl || options.url] = body || false;
+            if (options.cacheUrl != options.url) {
+              delete log[options.url];
+            }
+
             ajax.emit('complete');
           }
         });
