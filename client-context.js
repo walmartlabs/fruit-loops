@@ -85,6 +85,7 @@ module.exports = exports = function(options) {
 
     // And output the thing
     callback(undefined, $.root.html());
+    callback = undefined;
   }
   $.ajax.on('complete', emit);
 
