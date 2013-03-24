@@ -6,6 +6,9 @@ var $make = Cheerio.prototype.make;
 Cheerio.prototype.make = function(dom, context) {
   var ret = $make.call(this, dom, context);
 
+  ret.__defineGetter__('innerHTML', function() {
+    return this.html();
+  });
   ret.__defineSetter__('innerHTML', function(html) {
     this.html(html || '');
   });
