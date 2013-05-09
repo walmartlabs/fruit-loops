@@ -33,6 +33,12 @@ module.exports = exports = function(options) {
       // TODO : Make this generic, i.e. allow names other than `Phoenix`
       if (window.Phoenix && !changeRegistered) {
         changeRegistered = true;
+        window.Phoenix.on('emit', function() {
+          setTimeout(function() {
+            emit(true);
+          }, 10);
+        });
+
         window.Phoenix.on('change:view:end', function() {
           viewSet = true;
           emit();
@@ -59,7 +65,7 @@ module.exports = exports = function(options) {
   var changeRegistered,
       viewSet = false;
 
-  function emit() {
+  function emit(force) {
     // TODO : Figure put the best way to handle output after send... Error? Ignore? Log?
     if (!callback) {
       console.log($.root.html());
@@ -68,7 +74,7 @@ module.exports = exports = function(options) {
     // TODO : Detect the error page and handle appropriately
     // TODO : Reconsider the loading flag for the loading state (vs. active ajax).
     //      If we do that then we will need to provide an opt out mechanism.
-    if (!viewSet || !$.ajax.allComplete()) {
+    if (!force && (!viewSet || !$.ajax.allComplete())) {
       // Operations are still pending, don't push anything out just yet
       return;
     }
