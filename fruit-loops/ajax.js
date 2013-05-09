@@ -25,17 +25,23 @@ module.exports = function($) {
         // TODO : Handle any cookie info that might be necessary
         exec(function() {
           try {
+            var xhr = {
+              readyState: 4,
+              status: response.statusCode,
+              responseText: body
+            };
+
             if (!err && response.statusCode === 200) {
               try {
                 body = JSON.parse(body);
               } catch (err) {
                 body = undefined;
-                return options.error({}, 'parseerror', err);
+                return options.error(xhr, 'parseerror', err);
               }
 
-              options.success(body, 'success', {});
+              options.success(body, 'success', xhr);
             } else {
-              options.error({}, 'error', err);
+              options.error(xhr, 'error', err);
             }
           } finally {
             options.complete();
