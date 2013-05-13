@@ -26,7 +26,7 @@ module.exports = function($) {
         try {
           var xhr = {
             readyState: 4,
-            status: response.statusCode,
+            status: response && response.statusCode,
             responseText: body
           };
 
@@ -45,9 +45,9 @@ module.exports = function($) {
         } finally {
           options.complete();
 
-          cache[options.cacheUrl || options.url] = log[options.cacheUrl || options.url] = body || false;
+          log[options.cacheUrl || options.url] = body || false;
+          cache[options.url] = body ? JSON.stringify(body) : false;
           if (options.cacheUrl != options.url) {
-            delete cache[options.url];
             delete log[options.url];
           }
 
