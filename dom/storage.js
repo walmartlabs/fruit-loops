@@ -1,8 +1,12 @@
 var _ = require('underscore');
 
+// TODO : Remove this in favor of HAPI smart caching
+// TODO : Make this conditional as users that implement user behavior on the server will not
+// want this.
+var globalCache = {};
+
 module.exports = function(window, name) {
-  // TODO : Look into serialization between the server and the client
-  var cache = {};
+  var cache = globalCache[name] = globalCache[name] || {};
 
   window[name] = {
     getItem: function(value) {
