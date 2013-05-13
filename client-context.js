@@ -57,6 +57,7 @@ module.exports = exports = function(options) {
   dom.document(window);
   dom.location(window, 'http://' + host + options.url.path);
   dom.history(window);
+  dom.performance(window);
   dom.storage(window, 'localStorage');
   dom.storage(window, 'sessionStorage');
 
@@ -91,6 +92,7 @@ module.exports = exports = function(options) {
     // all of the scripts after the content elements
     $.$('body').append(files);
 
+    console.log('emit time: ' + (Date.now() - window.performance.timing.navigationStart));
     // And output the thing
     callback(undefined, $.root.html());
     callback = undefined;
