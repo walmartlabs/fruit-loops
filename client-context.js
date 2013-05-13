@@ -1,5 +1,6 @@
 var dom = require('./dom'),
     exec = require('./client-exec').exec,
+    rewriteStack = require('./client-exec').rewriteStack,
     fs = require('fs'),
     jQuery = require('./fruit-loops'),
     path = require('path'),
@@ -68,7 +69,7 @@ module.exports = exports = function(options) {
   function emit(force) {
     // TODO : Figure put the best way to handle output after send... Error? Ignore? Log?
     if (!callback) {
-      console.log(new Error().stack);//$.root.html());
+      console.log(rewriteStack(new Error().stack));//$.root.html());
       return;
     }
     // TODO : Detect the error page and handle appropriately
@@ -77,7 +78,7 @@ module.exports = exports = function(options) {
     if (!force && (!viewSet || !$.ajax.allComplete())) {
       // Operations are still pending, don't push anything out just yet
       setTimeout(function() {
-        //emit(true);
+        emit(true);
       }, 500);
       return;
     }
