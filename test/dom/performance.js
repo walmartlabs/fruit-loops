@@ -7,8 +7,10 @@ describe('dom - performance', function() {
     sinon.stub(Date, 'now', function() { return 42; });
 
     var window = {};
-    performance(window);
 
+    performance(window);
     window.performance.timing.navigationStart.should.equal(42);
+
+    Date.now.restore();
   });
 });
