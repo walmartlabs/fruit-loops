@@ -3,14 +3,18 @@ var sinon = require('sinon');
 var performance = require('../../lib/dom/performance');
 
 describe('dom - performance', function() {
-  it('should record naviagationStart', function() {
-    sinon.stub(Date, 'now', function() { return 42; });
+  var window;
+  beforeEach(function() {
+    window = {};
 
-    var window = {};
-
+    this.stub(Date, 'now', function() { return 42; });
     performance(window);
-    window.performance.timing.navigationStart.should.equal(42);
+  });
 
-    Date.now.restore();
+  it('should record navigationStart', function() {
+    window.performance.timing.navigationStart.should.equal(42);
+  });
+  it('should record domLoading', function() {
+    window.performance.timing.domLoading.should.equal(42);
   });
 });
