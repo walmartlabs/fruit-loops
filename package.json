@@ -1,0 +1,41 @@
+{
+  "name": "fruit-loops",
+  "version": "0.1.0",
+  "description": "",
+  "keywords": [],
+  "authors": [
+    "Kevin Decker <kpdecker@gmail.com> (http://incaseofstairs.com)"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/walmartlabs/fruit-loops.git"
+  },
+  "engines": {
+    "node": ">=0.8"
+  },
+  "main": "./server",
+  "dependencies": {
+    "cheerio": "~0.10.7",
+    "printf": "~0.1.1",
+    "request": "~2.14.0",
+    "source-map": "~0.1.8",
+    "underscore": "~1.4.4"
+  },
+  "devDependencies": {
+    "mocha": "~1.9",
+    "should": "*",
+    "sinon": "*",
+    "grunt": "~0.4.1",
+    "grunt-cli": "~0.1.8",
+    "grunt-contrib-jshint": "~0.4.3"
+  },
+  "scripts": {
+    "blanket": {
+      "pattern": "//^((?!/node_modules/)(?!/test/).)*$/",
+      "data-cover-flags": {
+        "branchTracking": true
+      }
+    },
+    "test": "./node_modules/.bin/grunt test"
+  }
+}
