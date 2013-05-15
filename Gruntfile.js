@@ -15,20 +15,18 @@ module.exports = function(grunt) {
     mochacov: {
       test: {
         options: {
-          reporter: 'spec',
-          require: ['should']
+          reporter: 'spec'
         },
         src: ['test/**/*.js']
       },
       cov: {
         options: {
-          reporter: 'html-cov',
-          require: ['should']
+          reporter: 'html-cov'
         },
         src: ['test/**/*.js']
       },
       options: {
-        require: ['should']
+        require: ['should', './test/lib']
       }
     }
   });
