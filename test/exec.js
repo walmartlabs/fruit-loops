@@ -6,7 +6,11 @@ describe('exec', function() {
   beforeEach(function() {
     var self = this;
     this.stub(fs, 'readFileSync', function(name) {
-      return name;
+      if (/^new/.test(name)) {
+        return 'Line 1\nLine 2\nLine 3\nLine 4\nLine 5';
+      } else {
+        return name;
+      }
     });
     this.stub(sourceMap, 'SourceMapConsumer', function(name) {
       if (/baz/.test(name)) {
@@ -14,12 +18,49 @@ describe('exec', function() {
       }
 
       this.originalPositionFor = self.spy(function(pos) {
-        return {source: 'new' + name, line: pos.line+10, column: pos.column+10};
+        if (/exec.js/.test(name)) {
+          return {source: 'new' + name, line: 2, column: pos.column+10};
+        } else {
+          return {source: 'new' + name, line: pos.line+10, column: pos.column+10};
+        }
       });
     });
   });
   afterEach(function() {
     require('../lib/exec/source-map').reset();
+  });
+
+  describe('#exec', function() {
+    it('should include error context', function() {
+      try {
+        exec.exec(function() {
+          throw new Error();
+        });
+      } catch (err) {
+        err.stack.should.match(/\t     1:  Line 1\n\t     2:> Line 2\n\t     3:  Line 3\n\t     4:  Line 4\n\t     5:  Line 5\n\n/);
+      }
+    });
+
+    it('should rewriteStack', function() {
+      try {
+        exec.exec(function() {
+          throw new Error();
+        });
+      } catch (err) {
+        err.stack.should.match(/at \(new.*?exec.js.map.*?\)\n  at \(native\)\n/);
+      }
+    });
+    it('should rewriteStack once', function() {
+      try {
+        exec.exec(function() {
+          exec.exec(function() {
+            throw new Error();
+          });
+        });
+      } catch (err) {
+        err.stack.should.match(/at \(new.*?exec.js.map.*?\)\n  at \(native\)\n/);
+      }
+    });
   });
 
   describe('#rewriteStack', function() {
