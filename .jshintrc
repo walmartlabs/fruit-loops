@@ -1,4 +1,3 @@
-/*dotfiles node*/
 {
   "node": true,
   "es5": true,
@@ -28,5 +27,10 @@
   "loopfunc": true,
   "shadow": true,
   "nonstandard": true,
-  "onevar": false
+  "onevar": false,
+
+  "predef": [
+    "describe",
+    "it"
+  ]
 }

@@ -23,11 +23,12 @@
   },
   "devDependencies": {
     "mocha": "~1.9",
-    "should": "*",
+    "should": "~1.2.2",
     "sinon": "*",
     "grunt": "~0.4.1",
     "grunt-cli": "~0.1.8",
-    "grunt-contrib-jshint": "~0.4.3"
+    "grunt-contrib-jshint": "~0.4.3",
+    "grunt-mocha-cov": "0.0.5"
   },
   "scripts": {
     "blanket": {
