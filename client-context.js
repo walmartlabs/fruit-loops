@@ -36,13 +36,8 @@ module.exports = exports = function(options) {
         changeRegistered = true;
         window.Phoenix.on('emit', function() {
           setTimeout(function() {
-            emit(true);
+            emit();
           }, 10);
-        });
-
-        window.Phoenix.on('change:view:end', function() {
-          viewSet = true;
-          emit();
         });
       }
 
@@ -73,16 +68,6 @@ module.exports = exports = function(options) {
       console.log(rewriteStack(new Error().stack));//$.root.html());
       return;
     }
-    // TODO : Detect the error page and handle appropriately
-    // TODO : Reconsider the loading flag for the loading state (vs. active ajax).
-    //      If we do that then we will need to provide an opt out mechanism.
-    if (!force && (!viewSet || !$.ajax.allComplete())) {
-      // Operations are still pending, don't push anything out just yet
-      setTimeout(function() {
-        emit(true);
-      }, 500);
-      return;
-    }
 
     // Inline any script content that we may have received
     $.$('body').append('<script>var $serverCache = ' + $.ajax.toJSON() + ';</script>');
@@ -97,7 +82,6 @@ module.exports = exports = function(options) {
     callback(undefined, $.root.html());
     callback = undefined;
   }
-  $.ajax.on('complete', emit);
 
   var files = $.$('script');
   files.each(function() {
