@@ -1,5 +1,11 @@
 var Mocha = require('mocha'),
-    sinon = require('sinon');
+    chai = require("chai"),
+    sinonChai = require("sinon-chai");
+
+chai.should();
+chai.use(sinonChai);
+
+var sinon = require('sinon');
 
 sinon.config = {
   injectIntoThis: true,
