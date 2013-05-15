@@ -1,3 +1,4 @@
+/*dotfiles node*/
 {
   "node": true,
   "es5": true,
