@@ -16,18 +16,17 @@ module.exports = function(grunt) {
       test: {
         options: {
           reporter: 'spec'
-        },
-        src: ['test/**/*.js']
+        }
       },
       cov: {
         options: {
           reporter: 'html-cov'
-        },
-        src: ['test/**/*.js']
+        }
       },
       options: {
         require: ['./test/lib']
-      }
+      },
+      src: ['test/**/*.js,!test/artifacts/*.js']
     }
   });
 
