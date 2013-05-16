@@ -13,7 +13,7 @@
   "engines": {
     "node": ">=0.8"
   },
-  "main": "./server",
+  "main": "./lib",
   "dependencies": {
     "cheerio": "~0.10.7",
     "printf": "~0.1.1",
