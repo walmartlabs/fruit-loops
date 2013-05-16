@@ -8,7 +8,7 @@ module.exports = function(grunt) {
       },
       files: [
         'lib/**/*.js',
-        'test/**/*.js'
+        'test/**/*.js,!test/artifacts/*.js'
       ]
     },
 
