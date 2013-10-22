@@ -20,13 +20,14 @@ module.exports = function(grunt) {
       },
       cov: {
         options: {
-          reporter: 'html-cov'
+          reporter: 'html-cov',
+          output: 'cov.html'
         }
       },
       options: {
-        require: ['./test/lib']
-      },
-      src: ['test/**/*.js,!test/artifacts/*.js']
+        require: ['./test/lib'],
+        files: ['test/dom/*.js', 'test/jquery/*.js', 'test/*.js']
+      }
     }
   });
 
