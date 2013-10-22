@@ -2,7 +2,7 @@ var sinon = require('sinon');
 
 var performance = require('../../lib/dom/performance');
 
-describe('dom - performance', function() {
+describe('dom.performance', function() {
   var window;
   beforeEach(function() {
     window = {};
