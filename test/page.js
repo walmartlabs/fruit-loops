@@ -13,7 +13,7 @@ describe('page', function() {
     });
 
     page.window.$.should.exist;
-    page.window.$server.should.be.true;
+    page.window.$serverSide.should.be.true;
   });
   it('should load all inlined scripts', function() {
     var page = fruitLoops.page({
