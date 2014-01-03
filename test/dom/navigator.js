@@ -1,6 +1,6 @@
 var navigator = require('../../lib/dom/navigator');
 
-describe('dom - navigator', function() {
+describe('dom.navigator', function() {
   var window;
   beforeEach(function() {
     window = {};

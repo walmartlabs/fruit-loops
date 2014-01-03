@@ -36,7 +36,7 @@ describe('dom.document', function() {
       window.$.should.have.been.calledWith('bar');
     });
   });
-  describe('#querySelectorAll', function() {
+  describe('#createElement', function() {
     it('should query arbitrary values', function() {
       ret = ['foo'];
       window.document.createElement('bar').should.eql(['foo']);

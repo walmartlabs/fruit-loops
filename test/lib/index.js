@@ -2,7 +2,7 @@ var Mocha = require('mocha'),
     chai = require("chai"),
     sinonChai = require("sinon-chai");
 
-chai.should();
+global.should = chai.should();
 chai.use(sinonChai);
 
 var sinon = require('sinon');
