@@ -1,32 +1,39 @@
 var fruitLoops = require('../lib'),
     exec = require('../lib/exec'),
+    fs = require('fs'),
     sinon = require('sinon');
 
 describe('page', function() {
-  it('should load html source', function() {
+  it('should load html source', function(done) {
     var page = fruitLoops.page({
       userAgent: 'anything but android',
       url: {
         path: '/foo'
       },
-      index: __dirname + '/artifacts/empty-page.html'
+      index: __dirname + '/artifacts/empty-page.html',
+      loaded: function(err, window) {
+        window.$.should.exist;
+        window.$serverSide.should.be.true;
+        done();
+      }
     });
-
-    page.window.$.should.exist;
-    page.window.$serverSide.should.be.true;
   });
-  it('should load all inlined scripts', function() {
+  it('should load all inlined scripts', function(done) {
     var page = fruitLoops.page({
       userAgent: 'anything but android',
       url: {
         path: '/foo'
       },
-      index: __dirname + '/artifacts/script-page.html'
+      index: __dirname + '/artifacts/script-page.html',
+      loaded: function() {
+        page.window.inlinedVar.should.equal(1);
+        page.window.externalVar.should.equal(2);
+        page.window.syncVar.should.equal(3);
+        done();
+      }
     });
-    page.window.inlinedVar.should.equal(1);
-    page.window.externalVar.should.equal(2);
   });
-  it('should allow custom file resolution', function() {
+  it('should allow custom file resolution', function(done) {
     var resolver = this.spy(function() {
       return __dirname + '/artifacts/other-script.js';
     });
@@ -37,15 +44,20 @@ describe('page', function() {
         path: '/foo'
       },
       index: __dirname + '/artifacts/script-page.html',
-      resolver: resolver
+      resolver: resolver,
+      loaded: function() {
+        resolver.should
+            .have.been.calledOnce
+            .have.been.calledWith('/test-script.js', page.window);
+
+        page.window.inlinedVar.should.equal(1);
+        page.window.externalVar.should.equal(3);
+        page.window.syncVar.should.equal(4);
+        done();
+      }
     });
-    resolver.should
-        .have.been.calledOnce
-        .have.been.calledWith('/test-script.js', page.window);
-    page.window.inlinedVar.should.equal(1);
-    page.window.externalVar.should.equal(3);
   });
-  it('should error on missing scripts', function() {
+  it('should error on missing scripts', function(done) {
     var callback = this.spy();
 
     var page = fruitLoops.page({
@@ -57,11 +69,11 @@ describe('page', function() {
       resolver: function() {
         return __dirname + '/artifacts/not-a-script.js';
       },
-      callback: callback
+      callback: function(err) {
+        err.should.be.instanceOf(Error);
+        done();
+      }
     });
-    callback.should
-        .have.been.calledOnce
-        .have.been.calledWith(sinon.match.instanceOf(Error));
   });
 
   it('should handle throws in nextTick', function() {
@@ -104,6 +116,7 @@ describe('page', function() {
         should.not.exist(undefined);
 
         window.emit();
+        setTimeout.clock.tick(1000);
       },
       callback: function(err, html) {
         finalize.should.have.been.calledOnce;
@@ -114,7 +127,46 @@ describe('page', function() {
         done();
       }
     });
+  });
 
-    setTimeout.clock.tick(1000);
+  it('should cache scripts', function(done) {
+    var resolver = this.spy(function() {
+      return __dirname + '/artifacts/other-script.js';
+    });
+    this.spy(fs, 'readFile');
+
+    var page;
+    function exec(loaded) {
+      page = fruitLoops.page({
+        userAgent: 'anything but android',
+        cacheResources: true,
+        url: {
+          path: '/foo'
+        },
+        index: __dirname + '/artifacts/script-page.html',
+        resolver: resolver,
+        loaded: function() {
+          resolver.should
+              .have.been.calledWith('/test-script.js', page.window);
+
+          page.window.inlinedVar.should.equal(1);
+          page.window.externalVar.should.equal(3);
+          page.window.syncVar.should.equal(4);
+          loaded();
+        }
+      });
+    }
+
+    exec(function() {
+      resolver.should.have.been.calledOnce;
+      fs.readFile.should.have.been.calledTwice;
+
+      exec(function() {
+        resolver.should.have.been.calledTwice;
+        fs.readFile.should.have.been.calledTwice;
+
+        done();
+      });
+    });
   });
 });
