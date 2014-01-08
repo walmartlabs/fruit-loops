@@ -3,8 +3,12 @@ var exec = require('../lib/exec'),
     sourceMap = require('source-map');
 
 describe('exec', function() {
+  var debug;
   beforeEach(function() {
     var self = this;
+    debug = exec.debug;
+    exec.debug = false;
+
     this.stub(fs, 'readFileSync', function(name) {
       if (/^new/.test(name)) {
         return 'Line 1\nLine 2\nLine 3\nLine 4\nLine 5';
@@ -27,6 +31,7 @@ describe('exec', function() {
     });
   });
   afterEach(function() {
+    exec.debug = debug;
     require('../lib/exec/source-map').reset();
   });
 
