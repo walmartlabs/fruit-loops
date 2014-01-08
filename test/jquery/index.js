@@ -7,6 +7,7 @@ describe('$', function() {
       inst;
   beforeEach(function() {
     window = {};
+    window.self = window;
     dom.document(window);
     dom.navigator(window, {userAgent: ''});
     inst = $(window, '');
@@ -30,6 +31,10 @@ describe('$', function() {
       doc.on('foo', function(){}).should.equal(doc);
       doc.off('foo', function(){}).should.equal(doc);
     });
+    it('should accept as context', function() {
+      inst = $(window, '<div></div>');
+      inst.$('div', window.document).length.should.equal(1);
+    });
   });
   describe('window object', function() {
     it('should accept window object', function() {
@@ -39,6 +44,10 @@ describe('$', function() {
       var doc = inst.$(window);
       doc.on('foo', function(){}).should.equal(doc);
       doc.off('foo', function(){}).should.equal(doc);
+    });
+    it('should accept as context', function() {
+      inst = $(window, '<div></div>');
+      inst.$('div', window).length.should.equal(1);
     });
   });
 
