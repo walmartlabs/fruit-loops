@@ -89,4 +89,32 @@ describe('page', function() {
     exec.exec.should.have.been.called;
     spy.should.have.been.calledWith(error);
   });
+
+  it('should output on emit call', function(done) {
+    var finalize = this.spy();
+
+    var page = fruitLoops.page({
+      userAgent: 'anything but android',
+      url: {
+        path: '/foo'
+      },
+      index: __dirname + '/artifacts/empty-page.html',
+      finalize: finalize,
+      loaded: function(err, window) {
+        should.not.exist(undefined);
+
+        window.emit();
+      },
+      callback: function(err, html) {
+        finalize.should.have.been.calledOnce;
+        finalize.should.have.been.calledWith(undefined, page.window);
+
+        should.not.exist(err);
+        html.should.equal('<!doctype html>\n<html>\n  <body>foo<script>var $serverCache = {};</script></body>\n</html>\n');
+        done();
+      }
+    });
+
+    setTimeout.clock.tick(1000);
+  });
 });
