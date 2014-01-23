@@ -18,6 +18,28 @@ describe('page', function() {
       }
     });
   });
+  it('should callback before script init', function(done) {
+    var execCalled;
+    var page = fruitLoops.page({
+      userAgent: 'anything but android',
+      url: {
+        path: '/foo'
+      },
+      index: __dirname + '/artifacts/script-page.html',
+      beforeExec: function(window, next) {
+        should.exist(window);
+        execCalled = true;
+        next();
+      },
+      loaded: function() {
+        execCalled.should.be.true;
+        page.window.inlinedVar.should.equal(1);
+        page.window.externalVar.should.equal(2);
+        page.window.syncVar.should.equal(3);
+        done();
+      }
+    });
+  });
   it('should load all inlined scripts', function(done) {
     var page = fruitLoops.page({
       userAgent: 'anything but android',
