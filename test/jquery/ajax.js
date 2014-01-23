@@ -6,13 +6,23 @@ describe('ajax', function() {
   var server;
   before(function(done) {
     server = new hapi.Server(0);
-    server.route({
-      path: '/',
-      method: 'GET',
-      handler: function(req, reply) {
-        reply({data: 'get!'});
+    server.route([
+      {
+        path: '/',
+        method: 'GET',
+        handler: function(req, reply) {
+          reply({data: 'get!'});
+        }
+      },
+      {
+        path: '/',
+        method: 'POST',
+        handler: function(req, reply) {
+          req.payload.data = 'post!';
+          reply(req.payload);
+        }
       }
-    });
+    ]);
     server.start(done);
   });
   after(function(done) {
@@ -56,8 +66,38 @@ describe('ajax', function() {
       });
       xhrReturn.readyState.should.equal(2);
     });
-    it('should handle POST requests');
+    it('should handle POST requests', function(done) {
+      var successCalled;
+      var xhrReturn = $.ajax({
+        type: 'POST',
+        data: {
+          foo: '1',
+          bar: '2'
+        },
+        url: 'http://localhost:' + server.info.port + '/',
+        success: function(data, status, xhr) {
+          data.should.eql({data: 'post!', foo: '1', bar: '2'});
+
+          status.should.equal('success');
+
+          xhr.should.equal(xhrReturn);
+          xhr.readyState.should.equal(4);
+          successCalled = true;
+        },
+        complete: function(xhr, status) {
+          should.exist(successCalled);
+
+          status.should.equal('success');
+
+          xhr.should.equal(xhrReturn);
+          xhr.readyState.should.equal(4);
+          done();
+        }
+      });
+      xhrReturn.readyState.should.equal(2);
+    });
     it('should handle jsonp requests');
+    it('should short circuit cached requests');
 
     it('should allow requests to be cancelled');
     it('should handle syntax errors');
