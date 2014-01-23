@@ -6,7 +6,11 @@ describe('$', function() {
   var window,
       inst;
   beforeEach(function() {
-    window = {};
+    window = {
+      nextTick: function(callback) {
+        callback();
+      }
+    };
     window.self = window;
     dom.document(window);
     dom.navigator(window, {userAgent: ''});
