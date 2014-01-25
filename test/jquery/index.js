@@ -55,6 +55,37 @@ describe('$', function() {
     });
   });
 
+  describe('known caching', function() {
+    it('should cache root', function() {
+      inst = $(window, '<html></html>');
+      inst.$('html', window).should.equal(inst.$(':root', window));
+    });
+    it('should cache head object', function() {
+      inst = $(window, '<head></head>');
+      inst.$('head', window).should.equal(inst.$('head', window));
+
+      inst = $(window, '<html><head></head></html>');
+      inst.$('head', window).should.equal(inst.$('head', window));
+    });
+    it('should cache body object', function() {
+      inst = $(window, '<body></body>');
+      inst.$('body', window).should.equal(inst.$('body', window));
+
+      inst = $(window, '<html><body></body></html>');
+      inst.$('body', window).should.equal(inst.$('body', window));
+    });
+    it('should not fail if there are no such objects', function() {
+      inst.$('html', window).length.should.equal(0);
+      inst.$('head', window).length.should.equal(0);
+      inst.$('body', window).length.should.equal(0);
+
+      inst = $(window, '<div></div>');
+      inst.$('html', window).length.should.equal(0);
+      // inst.$('head', window).length.should.equal(0);
+      // inst.$('body', window).length.should.equal(0);
+    });
+  });
+
   describe('#param', function() {
     it('should return params', function() {
       inst.$.param({foo: ' bar', baz: 'bat='}).should.equal('foo=%20bar&baz=bat%3D');
