@@ -26,7 +26,7 @@ describe('page', function() {
         path: '/foo'
       },
       index: __dirname + '/artifacts/script-page.html',
-      beforeExec: function(window, next) {
+      beforeExec: function(window, exec, next) {
         should.exist(window);
         execCalled = true;
         next();
@@ -142,7 +142,7 @@ describe('page', function() {
       },
       callback: function(err, html) {
         finalize.should.have.been.calledOnce;
-        finalize.should.have.been.calledWith(undefined, page.window);
+        finalize.should.have.been.calledWith(page.window);
 
         should.not.exist(err);
         html.should.equal('<!doctype html>\n<html>\n  <body>foo<script>var $serverCache = {};</script></body>\n</html>\n');
