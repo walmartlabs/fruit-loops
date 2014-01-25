@@ -10,6 +10,7 @@ describe('ajax', function() {
       {
         path: '/',
         method: 'GET',
+        config: {jsonp: 'callback'},
         handler: function(req, reply) {
           reply({data: 'get!'});
         }
@@ -96,7 +97,30 @@ describe('ajax', function() {
       });
       xhrReturn.readyState.should.equal(2);
     });
-    it('should handle jsonp requests');
+    it('should handle jsonp requests', function(done) {
+      var successCalled;
+      var xhrReturn = $.ajax({
+        url: 'http://localhost:' + server.info.port + '/?callback=?',
+        success: function(data, status, xhr) {
+          data.should.eql({data: 'get!'});
+
+          status.should.equal('success');
+
+          xhr.should.equal(xhrReturn);
+          xhr.readyState.should.equal(4);
+          successCalled = true;
+        },
+        complete: function(xhr, status) {
+          should.exist(successCalled);
+
+          status.should.equal('success');
+
+          xhr.should.equal(xhrReturn);
+          xhr.readyState.should.equal(4);
+          done();
+        }
+      });
+    });
     it('should short circuit cached requests');
 
     it('should allow requests to be cancelled');
