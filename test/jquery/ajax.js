@@ -22,6 +22,13 @@ describe('ajax', function() {
           req.payload.data = 'post!';
           reply(req.payload);
         }
+      },
+      {
+        path: '/parse',
+        method: 'GET',
+        handler: function(req, reply) {
+          reply('utter crap');
+        }
       }
     ]);
     server.start(done);
@@ -124,7 +131,33 @@ describe('ajax', function() {
     it('should short circuit cached requests');
 
     it('should allow requests to be cancelled');
-    it('should handle syntax errors');
+    it('should handle syntax errors', function(done) {
+      var errorCalled;
+      var xhrReturn = $.ajax({
+        url: 'http://localhost:' + server.info.port + '/parse',
+        success: function(data, status, xhr) {
+          throw new Error('Should not have been called');
+        },
+        error: function(xhr, status, err) {
+          status.should.equal('parsererror');
+
+          xhr.should.equal(xhrReturn);
+          xhr.responseText.should.equal('utter crap');
+          xhr.readyState.should.equal(4);
+          errorCalled = true;
+        },
+        complete: function(xhr, status) {
+          should.exist(errorCalled);
+
+          status.should.equal('parsererror');
+
+          xhr.should.equal(xhrReturn);
+          xhr.readyState.should.equal(4);
+          done();
+        }
+      });
+      xhrReturn.readyState.should.equal(2);
+    });
     it('should track ttl');
     it('should pass cookies in user mode');
     it('should emit complete');
