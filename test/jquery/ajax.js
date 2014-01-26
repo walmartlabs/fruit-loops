@@ -3,8 +3,13 @@ var ajax = require('../../lib/jquery/ajax'),
     hapi = require('hapi');
 
 describe('ajax', function() {
-  var server;
+  var server,
+      $,
+      inst;
   before(function(done) {
+    $ = {};
+    inst = ajax($);
+
     server = new hapi.Server(0);
     server.route([
       {
@@ -44,11 +49,6 @@ describe('ajax', function() {
   });
 
   describe('#ajax', function() {
-    var $;
-    beforeEach(function() {
-      $ = {};
-      ajax($);
-    });
     it('should make request', function(done) {
       var successCalled;
       var xhrReturn = $.ajax({
@@ -164,6 +164,24 @@ describe('ajax', function() {
   });
 
   it('should output returned values');
-  it('should record all complete');
+  it('should record all complete', function(done) {
+    inst.once('complete', function() {
+      inst.allComplete().should.be.true;
+      done();
+    });
+
+    $.ajax({
+      type: 'POST',
+      url: 'http://localhost:' + server.info.port + '/',
+      success: function(data, status, xhr) {
+        inst.allComplete().should.be.false;
+      },
+      complete: function(xhr, status) {
+        inst.allComplete().should.be.false;
+      }
+    });
+
+    inst.allComplete().should.be.false;
+  });
   it('should allow all pending requests to be cancelled');
 });
