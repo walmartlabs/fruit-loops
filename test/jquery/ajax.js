@@ -128,7 +128,26 @@ describe('ajax', function() {
         }
       });
     });
-    it('should short circuit cached requests');
+    it('should short circuit cached requests', function(done) {
+      $.ajax({
+        url: 'http://localhost:' + server.info.port + '/',
+        complete: function(xhr, status) {
+          var xhrReturn = $.ajax({
+            url: 'http://localhost:' + server.info.port + '/',
+            success: function(data, status, xhr) {
+              data.should.eql({data: 'get!'});
+
+              status.should.equal('success');
+
+              xhr.should.equal(xhrReturn);
+              xhr.readyState.should.equal(4);
+              done();
+            }
+          });
+          xhrReturn.readyState.should.equal(4);
+        }
+      });
+    });
 
     it('should allow requests to be cancelled');
     it('should handle syntax errors', function(done) {
