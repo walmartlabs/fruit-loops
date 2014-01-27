@@ -26,7 +26,7 @@ describe('page', function() {
         path: '/foo'
       },
       index: __dirname + '/artifacts/script-page.html',
-      beforeExec: function(window, exec, next) {
+      beforeExec: function(window, $, exec, next) {
         should.exist(window);
         execCalled = true;
         next();
@@ -135,12 +135,48 @@ describe('page', function() {
       index: __dirname + '/artifacts/empty-page.html',
       finalize: finalize,
       loaded: function(err, window) {
-        should.not.exist(undefined);
+        should.not.exist(err);
 
         window.emit();
         setTimeout.clock.tick(1000);
       },
       callback: function(err, html) {
+        finalize.should.have.been.calledOnce;
+        finalize.should.have.been.calledWith(page.window);
+
+        should.not.exist(err);
+        html.should.equal('<!doctype html>\n<html>\n  <body>foo<script>var $serverCache = {};</script></body>\n</html>\n');
+        done();
+      }
+    });
+  });
+  it('should allow emit on AJAX completion', function(done) {
+    var test = this,
+        finalize = test.spy(),
+        allComplete = false,
+        callback = false;
+
+    var page = fruitLoops.page({
+      userAgent: 'anything but android',
+      url: {
+        path: '/foo'
+      },
+      index: __dirname + '/artifacts/empty-page.html',
+      finalize: finalize,
+      loaded: function(err, window, $) {
+        test.stub($.ajax, 'allComplete', function() { console.log('allComplete', allComplete); return allComplete; });
+
+        window.emit('ajax');
+        setTimeout.clock.tick(1000);
+        callback.should.be.false;
+
+        allComplete = true;
+        $.ajax.emit('complete');
+        setTimeout.clock.tick(1000);
+      },
+      callback: function(err, html) {
+        callback = true;
+        allComplete.should.be.true;
         finalize.should.have.been.calledOnce;
         finalize.should.have.been.calledWith(page.window);
 
