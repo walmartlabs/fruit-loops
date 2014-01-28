@@ -187,6 +187,27 @@ describe('page', function() {
     });
   });
 
+  it('should call onEmit callbacks', function(done) {
+    var spy = this.spy();
+
+    var page = fruitLoops.page({
+      userAgent: 'anything but android',
+      url: {
+        path: '/foo'
+      },
+      index: __dirname + '/artifacts/empty-page.html',
+      loaded: function(err, window) {
+        window.onEmit(spy);
+        window.emit();
+        setTimeout.clock.tick(1000);
+      },
+      callback: function(err, html) {
+        spy.should.have.been.calledOnce;
+        done();
+      }
+    });
+  });
+
   it('should cache scripts', function(done) {
     var resolver = this.spy(function() {
       return __dirname + '/artifacts/other-script.js';
