@@ -186,6 +186,42 @@ describe('page', function() {
       }
     });
   });
+  it('should support multiple emits with navigate', function(done) {
+    var finalize = this.spy(),
+        firstEmitSeen;
+
+    var page = fruitLoops.page({
+      userAgent: 'anything but android',
+      url: {
+        path: '/foo'
+      },
+      index: __dirname + '/artifacts/empty-page.html',
+      finalize: finalize,
+      loaded: function(err, window) {
+        should.not.exist(err);
+
+        window.emit();
+        setTimeout.clock.tick(1000);
+      },
+      callback: function(err, html) {
+        should.not.exist(err);
+        html.should.equal('<!doctype html>\n<html>\n  <body>foo<script>var $serverCache = {};</script></body>\n</html>\n');
+
+        page.navigate('/bar', function(err, html) {
+          finalize.should.have.been.calledTwice;
+
+          should.not.exist(err);
+          html.should.equal('<!doctype html>\n<html>\n  <body>foo<script>var $serverCache = {};</script></body>\n</html>\n');
+
+          done();
+        });
+
+        page.window.location.toString().should.equal('http://localhost/bar');
+        page.emit();
+        setTimeout.clock.tick(1000);
+      }
+    });
+  });
 
   it('should call onEmit callbacks', function(done) {
     var spy = this.spy();
