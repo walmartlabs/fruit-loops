@@ -17,6 +17,7 @@
   "dependencies": {
     "async": "~0.2.9",
     "cheerio": "0.13.1",
+    "contextify": "~0.1.6",
     "lodash": "~2.4.1",
     "printf": "~0.1.1",
     "request": "~2.14.0",
