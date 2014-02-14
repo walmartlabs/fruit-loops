@@ -7,9 +7,6 @@ describe('ajax', function() {
       $,
       inst;
   before(function(done) {
-    $ = {};
-    inst = ajax($);
-
     server = new hapi.Server(0);
     server.route([
       {
@@ -48,6 +45,10 @@ describe('ajax', function() {
   after(function(done) {
     server.stop(done);
   });
+  beforeEach(function() {
+    $ = {};
+    inst = ajax($);
+  });
 
   it('should extend $', function() {
     var $ = {};
@@ -76,7 +77,10 @@ describe('ajax', function() {
 
           xhr.should.equal(xhrReturn);
           xhr.readyState.should.equal(4);
-          done();
+
+          inst.on('complete', function() {
+            done();
+          });
         }
       });
       xhrReturn.readyState.should.equal(2);
@@ -106,7 +110,10 @@ describe('ajax', function() {
 
           xhr.should.equal(xhrReturn);
           xhr.readyState.should.equal(4);
-          done();
+
+          inst.on('complete', function() {
+            done();
+          });
         }
       });
       xhrReturn.readyState.should.equal(2);
@@ -131,7 +138,10 @@ describe('ajax', function() {
 
           xhr.should.equal(xhrReturn);
           xhr.readyState.should.equal(4);
-          done();
+
+          inst.on('complete', function() {
+            done();
+          });
         }
       });
     });
@@ -148,7 +158,10 @@ describe('ajax', function() {
 
               xhr.should.equal(xhrReturn);
               xhr.readyState.should.equal(4);
-              done();
+
+              inst.on('complete', function() {
+                done();
+              });
             }
           });
           xhrReturn.readyState.should.equal(4);
@@ -179,7 +192,10 @@ describe('ajax', function() {
 
           xhr.should.equal(xhrReturn);
           xhr.readyState.should.equal(4);
-          done();
+
+          inst.on('complete', function() {
+            done();
+          });
         }
       });
       xhrReturn.readyState.should.equal(2);
@@ -206,14 +222,14 @@ describe('ajax', function() {
 
           xhr.should.equal(xhrReturn);
           xhr.readyState.should.equal(4);
-          done();
         }
+      });
+      inst.on('complete', function() {
+        done();
       });
       xhrReturn.readyState.should.equal(2);
     });
     it('should track ttl');
-    it('should pass cookies in user mode');
-    it('should emit complete');
   });
 
   it('should output returned values');
