@@ -34,6 +34,13 @@ describe('ajax', function() {
         handler: function(req, reply) {
           reply('utter crap');
         }
+      },
+      {
+        path: '/error',
+        method: 'GET',
+        handler: function(req, reply) {
+          reply(new Error('error'));
+        }
       }
     ]);
     server.start(done);
@@ -150,6 +157,33 @@ describe('ajax', function() {
     });
 
     it('should allow requests to be cancelled');
+    it('should handle http errors', function(done) {
+      var errorCalled;
+      var xhrReturn = $.ajax({
+        url: 'http://localhost:' + server.info.port + '/error',
+        success: function(data, status, xhr) {
+          throw new Error('Should not have been called');
+        },
+        error: function(xhr, status, err) {
+          status.should.equal('error');
+
+          xhr.should.equal(xhrReturn);
+          xhr.responseText.should.match(/"statusCode":500,/);
+          xhr.readyState.should.equal(4);
+          errorCalled = true;
+        },
+        complete: function(xhr, status) {
+          should.exist(errorCalled);
+
+          status.should.equal('error');
+
+          xhr.should.equal(xhrReturn);
+          xhr.readyState.should.equal(4);
+          done();
+        }
+      });
+      xhrReturn.readyState.should.equal(2);
+    });
     it('should handle syntax errors', function(done) {
       var errorCalled;
       var xhrReturn = $.ajax({
