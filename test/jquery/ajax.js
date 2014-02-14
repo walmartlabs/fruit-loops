@@ -46,6 +46,8 @@ describe('ajax', function() {
     server.stop(done);
   });
   beforeEach(function() {
+    ajax.reset();
+
     $ = {};
     inst = ajax($);
   });
@@ -148,23 +150,28 @@ describe('ajax', function() {
     it('should short circuit cached requests', function(done) {
       $.ajax({
         url: 'http://localhost:' + server.info.port + '/',
+        success: function(data, status, xhr) {
+          data.modified = true;
+        },
         complete: function(xhr, status) {
-          var xhrReturn = $.ajax({
-            url: 'http://localhost:' + server.info.port + '/',
-            success: function(data, status, xhr) {
-              data.should.eql({data: 'get!'});
+          setImmediate(function() {
+            var xhrReturn = $.ajax({
+              url: 'http://localhost:' + server.info.port + '/',
+              success: function(data, status, xhr) {
+                data.should.eql({data: 'get!'});
 
-              status.should.equal('success');
+                status.should.equal('success');
 
-              xhr.should.equal(xhrReturn);
-              xhr.readyState.should.equal(4);
+                xhr.should.equal(xhrReturn);
+                xhr.readyState.should.equal(4);
 
-              inst.on('complete', function() {
-                done();
-              });
-            }
+                inst.on('complete', function() {
+                  done();
+                });
+              }
+            });
+            xhrReturn.readyState.should.equal(4);
           });
-          xhrReturn.readyState.should.equal(4);
         }
       });
     });
