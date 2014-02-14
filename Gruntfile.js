@@ -15,7 +15,8 @@ module.exports = function(grunt) {
     mochacov: {
       test: {
         options: {
-          reporter: 'spec'
+          reporter: 'spec',
+          grep: grunt.option('grep')
         }
       },
       cov: {

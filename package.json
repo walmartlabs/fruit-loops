@@ -28,7 +28,7 @@
     "grunt": "~0.4.1",
     "grunt-cli": "~0.1.8",
     "grunt-contrib-jshint": "~0.4.3",
-    "grunt-mocha-cov": "0.0.7",
+    "grunt-mocha-cov": "~0.2.1",
     "hapi": "~2.1.1",
     "mocha": "~1.9",
     "should": "~1.2.2",
