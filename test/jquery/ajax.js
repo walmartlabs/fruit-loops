@@ -239,7 +239,6 @@ describe('ajax', function() {
     it('should track ttl');
   });
 
-  it('should output returned values');
   it('should record all complete', function(done) {
     inst.once('complete', function() {
       inst.allComplete().should.be.true;
@@ -258,6 +257,33 @@ describe('ajax', function() {
     });
 
     inst.allComplete().should.be.false;
+  });
+  it('should output returned values', function(done) {
+    $.ajax({
+      url: 'http://localhost:' + server.info.port + '/'
+    });
+    $.ajax({
+      type: 'POST',
+      url: 'http://localhost:' + server.info.port + '/?post',
+      cacheUrl: '/bar'
+    });
+    $.ajax({
+      url: 'http://localhost:' + server.info.port + '/error',
+      cacheUrl: 'http://localhost:' + server.info.port + '/error'
+    });
+    $.ajax({
+      url: 'http://localhost:' + server.info.port + '/parse'
+    });
+
+    inst.on('complete', function() {
+      if (inst.allComplete()) {
+        var cache = {};
+        cache['http://localhost:' + server.info.port + '/'] = {data: 'get!'};
+        cache['/bar'] = {data: 'post!'};
+        JSON.parse(inst.toJSON()).should.eql(cache);
+        done();
+      }
+    });
   });
   it('should allow all pending requests to be cancelled');
 });
