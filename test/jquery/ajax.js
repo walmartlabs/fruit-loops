@@ -318,5 +318,26 @@ describe('ajax', function() {
       }
     });
   });
-  it('should allow all pending requests to be cancelled');
+  it('should allow all pending requests to be cancelled', function(done) {
+    var xhr1 = $.ajax({
+      url: 'http://localhost:' + server.info.port + '/'
+    });
+    this.spy(xhr1, 'abort');
+
+    var xhr2 = $.ajax({
+      type: 'POST',
+      url: 'http://localhost:' + server.info.port + '/?post',
+      cacheUrl: '/bar'
+    });
+    this.spy(xhr2, 'abort');
+
+    inst.on('complete', function() {
+      if (inst.allComplete()) {
+        xhr1.abort.callCount.should.equal(1);
+        xhr2.abort.callCount.should.equal(1);
+        done();
+      }
+    });
+    inst.reset();
+  });
 });
