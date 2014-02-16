@@ -176,7 +176,6 @@ describe('ajax', function() {
       });
     });
 
-    it('should allow requests to be cancelled');
     it('should handle http errors', function(done) {
       var errorCalled;
       var xhrReturn = $.ajax({
@@ -235,6 +234,40 @@ describe('ajax', function() {
         done();
       });
       xhrReturn.readyState.should.equal(2);
+    });
+
+    it('should allow specific requests to be cancelled', function(done) {
+      var errorCalled = 0,
+          spy = this.spy();
+
+      var xhrReturn = $.ajax({
+        url: 'http://localhost:' + server.info.port + '/',
+        success: spy,
+        error: function(xhr, status, err) {
+          status.should.equal('abort');
+
+          xhr.should.equal(xhrReturn);
+          xhr.responseText.should.equal('');
+          xhr.readyState.should.equal(4);
+          errorCalled++;
+        },
+        complete: function(xhr, status) {
+          errorCalled.should.equal(1);
+          spy.callCount.should.equal(0);
+
+          status.should.equal('abort');
+
+          xhr.should.equal(xhrReturn);
+          xhr.readyState.should.equal(4);
+
+          // Should do nothing
+          xhrReturn.abort();
+        }
+      });
+      inst.on('complete', function() {
+        done();
+      });
+      xhrReturn.abort();
     });
     it('should track ttl');
   });
