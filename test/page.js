@@ -164,7 +164,7 @@ describe('page', function() {
       index: __dirname + '/artifacts/empty-page.html',
       finalize: finalize,
       loaded: function(err, window, $) {
-        test.stub($.ajax, 'allComplete', function() { console.log('allComplete', allComplete); return allComplete; });
+        test.stub($.ajax, 'allComplete', function() { return allComplete; });
 
         window.emit('ajax');
         setTimeout.clock.tick(1000);
