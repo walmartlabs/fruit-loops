@@ -29,6 +29,8 @@
   "onevar": false,
 
   "predef": [
+    "setImmediate",
+
     "describe",
     "it",
     "before",
