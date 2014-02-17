@@ -66,6 +66,20 @@ describe('exec', function() {
         err.stack.should.match(/at \(new.*?exec.js.map.*?\)\n  at \(native\)\n/);
       }
     });
+
+    it('should leave invalid stacks untouched', function() {
+      sourceMap.SourceMapConsumer.restore();
+      try {
+        exec.exec(function() {
+          var error = new Error();
+          error.stack = 'foo';
+          throw error;
+        });
+      } catch (err) {
+        console.log(err);
+        err.stack.should.equal('foo');
+      }
+    });
   });
 
   describe('#rewriteStack', function() {
