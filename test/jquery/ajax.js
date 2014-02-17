@@ -38,6 +38,26 @@ describe('ajax', function() {
         handler: function(req, reply) {
           reply(new Error('error'));
         }
+      },
+      {
+        path: '/ttl/{duration}',
+        method: 'GET',
+        config: {jsonp: 'callback'},
+        handler: function(req, reply) {
+          reply({data: 'ttl!'})
+              .ttl(parseInt(req.params.duration, 10)*60*1000);
+        }
+      },
+      {
+        path: '/cache',
+        method: '*',
+        handler: function(req, reply) {
+          var res = reply({data: 'ttl!'})
+              .header('cache-control', req.query.control);
+          if (req.query.status) {
+            res.code(req.query.status);
+          }
+        }
       }
     ]);
     server.start(done);
@@ -269,7 +289,6 @@ describe('ajax', function() {
       });
       xhrReturn.abort();
     });
-    it('should track ttl');
   });
 
   it('should record all complete', function(done) {
@@ -316,6 +335,197 @@ describe('ajax', function() {
         JSON.parse(inst.toJSON()).should.eql(cache);
         done();
       }
+    });
+  });
+
+  describe('#minimumCache', function() {
+    var minimumCache;
+    beforeEach(function() {
+      minimumCache = {
+        'no-cache': false,
+        private: false,
+        expires: Number.MAX_VALUE
+      };
+    });
+
+    it('should track minimum max-age time', function(done) {
+      $.ajax({
+        url: 'http://localhost:' + server.info.port + '/ttl/5'
+      });
+      $.ajax({
+        url: 'http://localhost:' + server.info.port + '/ttl/15'
+      });
+
+      inst.on('complete', function() {
+        if (inst.allComplete()) {
+          inst.minimumCache().should.eql({
+            'no-cache': false,
+            private: false,
+            expires: Date.now() + 5*60*1000
+          });
+
+          done();
+        }
+      });
+    });
+    it('should handle private caching', function() {
+      ajax.calcCache(minimumCache, ajax.cachingInfo({
+        request: {method: 'GET'},
+        statusCode: 200,
+        headers: {
+          'cache-control': 'max-age=' + (15 * 60) + ', private'
+        }
+      }));
+
+      minimumCache.should.eql({
+        'no-cache': false,
+        private: true,
+        expires: Date.now() + 15*60*1000
+      });
+    });
+    it('should handle expires caching', function() {
+      ajax.calcCache(minimumCache, ajax.cachingInfo({
+        request: {method: 'GET'},
+        statusCode: 200,
+        headers: {
+          expires: new Date(5*60*1000).toUTCString()
+        }
+      }));
+
+      minimumCache.should.eql({
+        'no-cache': false,
+        private: false,
+        expires: 5*60*1000
+      });
+    });
+    it('should handle pragma no-cache', function() {
+      ajax.calcCache(minimumCache, ajax.cachingInfo({
+        request: {method: 'GET'},
+        statusCode: 200,
+        headers: {
+          pragma: 'no-cache',
+          expires: new Date(5*60*1000).toUTCString()
+        }
+      }));
+
+      minimumCache.should.eql({
+        'no-cache': true,
+        private: false,
+        expires: undefined
+      });
+    });
+    it('should handle no-cache caching directives', function() {
+      ajax.calcCache(minimumCache, ajax.cachingInfo({
+        request: {method: 'GET'},
+        statusCode: 200,
+        headers: {
+          'cache-control': 'no-cache'
+        }
+      }));
+
+      minimumCache.should.eql({
+        'no-cache': true,
+        private: false,
+        expires: undefined
+      });
+    });
+    describe('non-cachable requests', function() {
+      it('should handle status codes', function(done) {
+        $.ajax({
+          url: 'http://localhost:' + server.info.port + '/cache?control='
+            + encodeURIComponent('max-age=' + (15 * 60))
+            + '&status=400'
+        });
+
+        inst.on('complete', function() {
+          if (inst.allComplete()) {
+            inst.minimumCache().should.eql({
+              'no-cache': true,
+              private: false,
+              expires: undefined
+            });
+
+            done();
+          }
+        });
+      });
+      it('should handle method', function(done) {
+        $.ajax({
+          type: 'POST',
+          url: 'http://localhost:' + server.info.port + '/cache?control='
+            + encodeURIComponent('max-age=' + (15 * 60))
+        });
+
+        inst.on('complete', function() {
+          if (inst.allComplete()) {
+            inst.minimumCache().should.eql({
+              'no-cache': true,
+              private: false,
+              expires: undefined
+            });
+
+            done();
+          }
+        });
+      });
+      it('should handle public flag', function(done) {
+        $.ajax({
+          type: 'POST',
+          url: 'http://localhost:' + server.info.port + '/cache?control='
+            + encodeURIComponent('max-age=' + (15 * 60) + ',public')
+        });
+
+        inst.on('complete', function() {
+          if (inst.allComplete()) {
+            inst.minimumCache().should.eql({
+              'no-cache': false,
+              private: false,
+              expires: Date.now() + 15*60*1000
+            });
+
+            done();
+          }
+        });
+      });
+    });
+
+    it('should pull ttl from cached elements', function(done) {
+      $.ajax({
+        url: 'http://localhost:' + server.info.port + '/ttl/5',
+        complete: function(xhr, status) {
+          setImmediate(function() {
+            inst.minimumCache().should.eql({
+              'no-cache': false,
+              private: false,
+              expires: Date.now() + 5*60*1000
+            });
+
+            // Clear out the minimum cache value
+            inst.reset();
+            inst.minimumCache().should.eql({
+              'no-cache': false,
+              private: false,
+              expires: Number.MAX_VALUE
+            });
+
+            // Hit the same service again to ensure that it's populated
+            var xhrReturn = $.ajax({
+              url: 'http://localhost:' + server.info.port + '/ttl/5'
+            });
+            xhrReturn.readyState.should.equal(4);
+
+            inst.on('complete', function() {
+              inst.minimumCache().should.eql({
+                'no-cache': false,
+                private: false,
+                expires: Date.now() + 5*60*1000
+              });
+
+              done();
+            });
+          });
+        }
+      });
     });
   });
   it('should allow all pending requests to be cancelled', function(done) {
