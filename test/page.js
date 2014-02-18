@@ -15,7 +15,7 @@ describe('page', function() {
       handler: function(req, reply) {
         setTimeout(function() {
           reply({data: 'get!'});
-        }, 100);
+        }, 10);
       }
     });
     server.start(done);
@@ -236,16 +236,14 @@ describe('page', function() {
           },
           index: __dirname + '/artifacts/empty-page.html',
           loaded: function(err, window, $) {
-            console.log('loaded');
             callback.should.be.false;
 
-            window.setTimeout(timeoutSpy, 100);
+            window.setTimeout(timeoutSpy, 25);
             window.emit('events');
             window.$.ajax({
               url: 'http://localhost:' + server.info.port + '/',
               complete: function() {
-                timeoutSpy.should.have.been.calledOnce;
-                window.setTimeout(timeoutSpy, 100);
+                window.setTimeout(timeoutSpy, 10);
                 ajaxSpy();
               }
             });
@@ -287,8 +285,37 @@ describe('page', function() {
       });
     });
 
-    it('should fail on multiple', function(done) {
+    it('should terminate pending', function(done) {
+      this.clock.restore();
 
+      function fail() {
+        throw new Error('This was called');
+      }
+
+      var page = fruitLoops.page({
+        userAgent: 'anything but android',
+        url: {
+          path: '/foo'
+        },
+        index: __dirname + '/artifacts/empty-page.html',
+        loaded: function(err, window, $) {
+          window.setTimeout(fail, 10);
+          window.$.ajax({
+            url: 'http://localhost:' + server.info.port + '/',
+            error: fail,
+            complete: fail
+          });
+          window.emit();
+        },
+        callback: function(err, html) {
+          setTimeout(function() {
+            done();
+          }, 100);
+        }
+      });
+    });
+
+    it('should fail on multiple', function(done) {
       var page = fruitLoops.page({
         userAgent: 'anything but android',
         url: {
