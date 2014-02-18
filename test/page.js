@@ -1,9 +1,29 @@
 var fruitLoops = require('../lib'),
     exec = require('../lib/exec'),
     fs = require('fs'),
+    hapi = require('hapi'),
     sinon = require('sinon');
 
 describe('page', function() {
+  var server;
+  before(function(done) {
+    server = new hapi.Server(0);
+    server.route({
+      path: '/',
+      method: 'GET',
+      config: {jsonp: 'callback'},
+      handler: function(req, reply) {
+        setTimeout(function() {
+          reply({data: 'get!'});
+        }, 100);
+      }
+    });
+    server.start(done);
+  });
+  after(function(done) {
+    server.stop(done);
+  });
+
   it('should load html source', function(done) {
     var page = fruitLoops.page({
       userAgent: 'anything but android',
@@ -201,7 +221,74 @@ describe('page', function() {
       });
     });
 
-    it('should fail on multiple events', function(done) {
+    describe('event completion', function() {
+      it('should emit after all ajax and timeouts', function(done) {
+        this.clock.restore();
+
+        var timeoutSpy = this.spy(),
+            ajaxSpy = this.spy(),
+            callback = false;
+
+        var page = fruitLoops.page({
+          userAgent: 'anything but android',
+          url: {
+            path: '/foo'
+          },
+          index: __dirname + '/artifacts/empty-page.html',
+          loaded: function(err, window, $) {
+            console.log('loaded');
+            callback.should.be.false;
+
+            window.setTimeout(timeoutSpy, 100);
+            window.emit('events');
+            window.$.ajax({
+              url: 'http://localhost:' + server.info.port + '/',
+              complete: function() {
+                timeoutSpy.should.have.been.calledOnce;
+                window.setTimeout(timeoutSpy, 100);
+                ajaxSpy();
+              }
+            });
+
+          },
+          callback: function(err, html) {
+            callback = true;
+
+            timeoutSpy.should.have.been.calledTwice;
+            ajaxSpy.should.have.been.calledOnce;
+
+            should.not.exist(err);
+            html.should.equal('<!doctype html>\n<html>\n  <body>foo<script>var $serverCache = {"http://localhost:' + server.info.port + '/": {"data":"get!"}};</script></body>\n</html>\n');
+            done();
+          }
+        });
+      });
+      it('should emit events if no events pending', function(done) {
+        var callback = false;
+
+        var page = fruitLoops.page({
+          userAgent: 'anything but android',
+          url: {
+            path: '/foo'
+          },
+          index: __dirname + '/artifacts/empty-page.html',
+          loaded: function(err, window, $) {
+            callback.should.be.false;
+            window.emit('events');
+          },
+          callback: function(err, html) {
+            callback = true;
+
+            should.not.exist(err);
+            html.should.equal('<!doctype html>\n<html>\n  <body>foo<script>var $serverCache = {};</script></body>\n</html>\n');
+            done();
+          }
+        });
+      });
+    });
+
+    it('should fail on multiple', function(done) {
+
       var page = fruitLoops.page({
         userAgent: 'anything but android',
         url: {
