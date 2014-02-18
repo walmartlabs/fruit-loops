@@ -36,6 +36,7 @@
     "before",
     "after",
     "beforeEach",
-    "afterEach"
+    "afterEach",
+    "should"
   ]
 }

@@ -76,7 +76,6 @@ describe('exec', function() {
           throw error;
         });
       } catch (err) {
-        console.log(err);
         err.stack.should.equal('foo');
       }
     });
