@@ -27,7 +27,7 @@ module.exports = function(grunt) {
       },
       options: {
         require: ['./test/lib'],
-        files: ['test/dom/*.js', 'test/jquery/*.js', 'test/*.js']
+        files: ['test/dom/*.js', 'test/exec/*.js', 'test/jquery/*.js', 'test/*.js']
       }
     }
   });
