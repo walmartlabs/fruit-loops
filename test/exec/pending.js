@@ -1,9 +1,12 @@
 var Pending = require('../../lib/exec/pending');
 
 describe('pending exec', function() {
-  var pending;
+  var pending,
+      popSpy;
   beforeEach(function() {
+    popSpy = this.spy();
     pending = Pending.create();
+    pending.on('pop', popSpy);
   });
 
   it('should init clean', function() {
@@ -19,13 +22,15 @@ describe('pending exec', function() {
       pending.push('test', 123, function() {});
       pending.pop('test', 123);
       pending.pending().should.equal(0);
+      popSpy.should.have.been.calledOnce;
     });
     it('should throw on mismatch', function() {
       pending.push('test', 123, function() {});
 
       should.throw(function() {
         pending.pop('test', 413);
-      }, Error, 'Unbalanced event stack: expected: test:413  found: test:123');
+      }, Error, 'Pending event test:413 not found.');
+      popSpy.should.not.have.been.called;
     });
   });
 
@@ -36,6 +41,7 @@ describe('pending exec', function() {
 
       pending.cancel('test', 123);
       spy.callCount.should.equal(1);
+      popSpy.should.have.been.calledOnce;
     });
     it('should throw on not found', function() {
       pending.push('test', 123, function() {});
@@ -43,6 +49,7 @@ describe('pending exec', function() {
       should.throw(function() {
         pending.cancel('test', 413);
       }, Error, 'Pending event test:413 not found.');
+      popSpy.should.not.have.been.called;
     });
   });
 
@@ -55,5 +62,6 @@ describe('pending exec', function() {
     pending.reset();
     spy.callCount.should.equal(1);
     spy2.callCount.should.equal(1);
+    popSpy.should.not.have.been.called;
   });
 });
