@@ -18,6 +18,19 @@ describe('page', function() {
       }
     });
   });
+  it('should handle page load errors', function(done) {
+    var page = fruitLoops.page({
+      userAgent: 'anything but android',
+      url: {
+        path: '/foo'
+      },
+      index: __dirname + '/artifacts/does-not-exist.html',
+      callback: function(err) {
+        err.should.be.instanceOf(Error);
+        done();
+      }
+    });
+  });
   it('should callback before script init', function(done) {
     var execCalled;
     var page = fruitLoops.page({
@@ -98,149 +111,172 @@ describe('page', function() {
     });
   });
 
-  it('should handle throws in nextTick', function() {
-    var spy = this.spy();
-    this.stub(exec, 'exec', function(callback) { callback(); });
-    this.stub(process, 'nextTick', function(callback) {
-      callback();
-    });
+  describe('#emit', function() {
+    it('should output on emit call', function(done) {
+      var finalize = this.spy();
 
-    var page = fruitLoops.page({
-      userAgent: 'anything but android',
-      url: {
-        path: '/foo'
-      },
-      index: __dirname + '/artifacts/empty-page.html',
-      callback: spy
-    });
+      var page = fruitLoops.page({
+        userAgent: 'anything but android',
+        url: {
+          path: '/foo'
+        },
+        index: __dirname + '/artifacts/empty-page.html',
+        finalize: finalize,
+        loaded: function(err, window) {
+          should.not.exist(err);
 
-    var error;
-    page.window.nextTick(function() {
-      error = new Error();
-      throw error;
-    });
-    process.nextTick.should.have.been.called;
-    exec.exec.should.have.been.called;
-    spy.should.have.been.calledWith(error);
-  });
-
-  it('should output on emit call', function(done) {
-    var finalize = this.spy();
-
-    var page = fruitLoops.page({
-      userAgent: 'anything but android',
-      url: {
-        path: '/foo'
-      },
-      index: __dirname + '/artifacts/empty-page.html',
-      finalize: finalize,
-      loaded: function(err, window) {
-        should.not.exist(err);
-
-        window.emit();
-        setTimeout.clock.tick(1000);
-      },
-      callback: function(err, html) {
-        finalize.should.have.been.calledOnce;
-        finalize.should.have.been.calledWith(page.window);
-
-        should.not.exist(err);
-        html.should.equal('<!doctype html>\n<html>\n  <body>foo<script>var $serverCache = {};</script></body>\n</html>\n');
-        done();
-      }
-    });
-  });
-  it('should allow emit on AJAX completion', function(done) {
-    var test = this,
-        finalize = test.spy(),
-        allComplete = false,
-        callback = false;
-
-    var page = fruitLoops.page({
-      userAgent: 'anything but android',
-      url: {
-        path: '/foo'
-      },
-      index: __dirname + '/artifacts/empty-page.html',
-      finalize: finalize,
-      loaded: function(err, window, $) {
-        test.stub($.ajax, 'allComplete', function() { return allComplete; });
-
-        window.emit('ajax');
-        setTimeout.clock.tick(1000);
-        callback.should.be.false;
-
-        allComplete = true;
-        $.ajax.emit('complete');
-        setTimeout.clock.tick(1000);
-      },
-      callback: function(err, html) {
-        callback = true;
-        allComplete.should.be.true;
-        finalize.should.have.been.calledOnce;
-        finalize.should.have.been.calledWith(page.window);
-
-        should.not.exist(err);
-        html.should.equal('<!doctype html>\n<html>\n  <body>foo<script>var $serverCache = {};</script></body>\n</html>\n');
-        done();
-      }
-    });
-  });
-  it('should support multiple emits with navigate', function(done) {
-    var finalize = this.spy(),
-        firstEmitSeen;
-
-    var page = fruitLoops.page({
-      userAgent: 'anything but android',
-      url: {
-        path: '/foo'
-      },
-      index: __dirname + '/artifacts/empty-page.html',
-      finalize: finalize,
-      loaded: function(err, window) {
-        should.not.exist(err);
-
-        window.emit();
-        setTimeout.clock.tick(1000);
-      },
-      callback: function(err, html) {
-        should.not.exist(err);
-        html.should.equal('<!doctype html>\n<html>\n  <body>foo<script>var $serverCache = {};</script></body>\n</html>\n');
-
-        page.navigate('/bar', function(err, html) {
-          finalize.should.have.been.calledTwice;
+          window.emit();
+          setTimeout.clock.tick(1000);
+        },
+        callback: function(err, html) {
+          finalize.should.have.been.calledOnce;
+          finalize.should.have.been.calledWith(page.window);
 
           should.not.exist(err);
           html.should.equal('<!doctype html>\n<html>\n  <body>foo<script>var $serverCache = {};</script></body>\n</html>\n');
+          done();
+        }
+      });
+    });
+
+    describe('ajax completion', function() {
+      it('should allow emit on AJAX completion', function(done) {
+        var test = this,
+            finalize = test.spy(),
+            allComplete = false,
+            callback = false;
+
+        var page = fruitLoops.page({
+          userAgent: 'anything but android',
+          url: {
+            path: '/foo'
+          },
+          index: __dirname + '/artifacts/empty-page.html',
+          finalize: finalize,
+          loaded: function(err, window, $) {
+            test.stub($.ajax, 'allComplete', function() { return allComplete; });
+
+            window.emit('ajax');
+            setTimeout.clock.tick(1000);
+            callback.should.be.false;
+
+            allComplete = true;
+            $.ajax.emit('complete');
+            setTimeout.clock.tick(1000);
+          },
+          callback: function(err, html) {
+            callback = true;
+            allComplete.should.be.true;
+            finalize.should.have.been.calledOnce;
+            finalize.should.have.been.calledWith(page.window);
+
+            should.not.exist(err);
+            html.should.equal('<!doctype html>\n<html>\n  <body>foo<script>var $serverCache = {};</script></body>\n</html>\n');
+            done();
+          }
+        });
+      });
+      it('should emit if nothing pending', function(done) {
+        var test = this,
+            callback = false;
+
+        var page = fruitLoops.page({
+          userAgent: 'anything but android',
+          url: {
+            path: '/foo'
+          },
+          index: __dirname + '/artifacts/empty-page.html',
+          loaded: function(err, window, $) {
+            callback.should.be.false;
+            window.emit('ajax');
+          },
+          callback: function(err, html) {
+            callback = true;
+
+            should.not.exist(err);
+            html.should.equal('<!doctype html>\n<html>\n  <body>foo<script>var $serverCache = {};</script></body>\n</html>\n');
+            done();
+          }
+        });
+      });
+    });
+
+    it('should fail on multiple events', function(done) {
+      var page = fruitLoops.page({
+        userAgent: 'anything but android',
+        url: {
+          path: '/foo'
+        },
+        index: __dirname + '/artifacts/empty-page.html',
+        loaded: function(err, window, $) {
+          window.emit();
+        },
+        callback: function(err, html) {
+          should.throw(function() {
+            page.emit();
+          }, Error, /Emit outside of request:.*/);
 
           done();
-        });
-
-        page.window.location.toString().should.equal('http://localhost/bar');
-        page.emit();
-        setTimeout.clock.tick(1000);
-      }
+        }
+      });
     });
-  });
 
-  it('should call onEmit callbacks', function(done) {
-    var spy = this.spy();
+    it('should support multiple emits with navigate', function(done) {
+      var finalize = this.spy(),
+          firstEmitSeen;
 
-    var page = fruitLoops.page({
-      userAgent: 'anything but android',
-      url: {
-        path: '/foo'
-      },
-      index: __dirname + '/artifacts/empty-page.html',
-      loaded: function(err, window) {
-        window.onEmit(spy);
-        window.emit();
-        setTimeout.clock.tick(1000);
-      },
-      callback: function(err, html) {
-        spy.should.have.been.calledOnce;
-        done();
-      }
+      var page = fruitLoops.page({
+        userAgent: 'anything but android',
+        url: {
+          path: '/foo'
+        },
+        index: __dirname + '/artifacts/empty-page.html',
+        finalize: finalize,
+        loaded: function(err, window) {
+          should.not.exist(err);
+
+          window.emit('events');
+          setTimeout.clock.tick(1000);
+        },
+        callback: function(err, html) {
+          should.not.exist(err);
+          html.should.equal('<!doctype html>\n<html>\n  <body>foo<script>var $serverCache = {};</script></body>\n</html>\n');
+
+          page.navigate('/bar', function(err, html) {
+            finalize.should.have.been.calledTwice;
+
+            should.not.exist(err);
+            html.should.equal('<!doctype html>\n<html>\n  <body>foo<script>var $serverCache = {};</script></body>\n</html>\n');
+
+            done();
+          });
+
+          page.window.location.toString().should.equal('http://localhost/bar');
+          page.emit();
+          setTimeout.clock.tick(1000);
+        }
+      });
+    });
+
+    it('should call onEmit callbacks', function(done) {
+      var spy = this.spy();
+
+      var page = fruitLoops.page({
+        userAgent: 'anything but android',
+        url: {
+          path: '/foo'
+        },
+        index: __dirname + '/artifacts/empty-page.html',
+        loaded: function(err, window) {
+          window.onEmit(spy);
+          window.emit();
+          setTimeout.clock.tick(1000);
+        },
+        callback: function(err, html) {
+          spy.should.have.been.calledOnce;
+          done();
+        }
+      });
     });
   });
 
