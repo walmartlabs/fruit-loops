@@ -31,9 +31,9 @@ describe('page', function() {
         path: '/foo'
       },
       index: __dirname + '/artifacts/empty-page.html',
-      loaded: function(err, window) {
-        window.$.should.exist;
-        window.$serverSide.should.be.true;
+      loaded: function(page) {
+        page.window.$.should.exist;
+        page.window.$serverSide.should.be.true;
         done();
       }
     });
@@ -59,8 +59,8 @@ describe('page', function() {
         path: '/foo'
       },
       index: __dirname + '/artifacts/script-page.html',
-      beforeExec: function(window, $, exec, next) {
-        should.exist(window);
+      beforeExec: function(page, next) {
+        should.exist(page);
         execCalled = true;
         next();
       },
@@ -95,15 +95,13 @@ describe('page', function() {
 
     var page = fruitLoops.page({
       userAgent: 'anything but android',
-      url: {
-        path: '/foo'
-      },
+      url: '/foo',
       index: __dirname + '/artifacts/script-page.html',
       resolver: resolver,
       loaded: function() {
         resolver.should
             .have.been.calledOnce
-            .have.been.calledWith('/test-script.js', page.window);
+            .have.been.calledWith('/test-script.js', page);
 
         page.window.inlinedVar.should.equal(1);
         page.window.externalVar.should.equal(3);
@@ -137,20 +135,16 @@ describe('page', function() {
 
       var page = fruitLoops.page({
         userAgent: 'anything but android',
-        url: {
-          path: '/foo'
-        },
+        path: '/foo',
         index: __dirname + '/artifacts/empty-page.html',
         finalize: finalize,
-        loaded: function(err, window) {
-          should.not.exist(err);
-
-          window.emit();
+        loaded: function(page) {
+          page.window.emit();
           setTimeout.clock.tick(1000);
         },
         callback: function(err, html) {
           finalize.should.have.been.calledOnce;
-          finalize.should.have.been.calledWith(page.window);
+          finalize.should.have.been.calledWith(page);
 
           should.not.exist(err);
           html.should.equal('<!doctype html>\n<html>\n  <body>foo<script>var $serverCache = {};</script></body>\n</html>\n');
@@ -173,22 +167,22 @@ describe('page', function() {
           },
           index: __dirname + '/artifacts/empty-page.html',
           finalize: finalize,
-          loaded: function(err, window, $) {
-            test.stub($.ajax, 'allComplete', function() { return allComplete; });
+          loaded: function(page) {
+            test.stub(page.$.ajax, 'allComplete', function() { return allComplete; });
 
-            window.emit('ajax');
+            page.window.emit('ajax');
             setTimeout.clock.tick(1000);
             callback.should.be.false;
 
             allComplete = true;
-            $.ajax.emit('complete');
+            page.$.ajax.emit('complete');
             setTimeout.clock.tick(1000);
           },
           callback: function(err, html) {
             callback = true;
             allComplete.should.be.true;
             finalize.should.have.been.calledOnce;
-            finalize.should.have.been.calledWith(page.window);
+            finalize.should.have.been.calledWith(page);
 
             should.not.exist(err);
             html.should.equal('<!doctype html>\n<html>\n  <body>foo<script>var $serverCache = {};</script></body>\n</html>\n');
@@ -206,9 +200,9 @@ describe('page', function() {
             path: '/foo'
           },
           index: __dirname + '/artifacts/empty-page.html',
-          loaded: function(err, window, $) {
+          loaded: function(page) {
             callback.should.be.false;
-            window.emit('ajax');
+            page.window.emit('ajax');
           },
           callback: function(err, html) {
             callback = true;
@@ -235,15 +229,15 @@ describe('page', function() {
             path: '/foo'
           },
           index: __dirname + '/artifacts/empty-page.html',
-          loaded: function(err, window, $) {
+          loaded: function(page) {
             callback.should.be.false;
 
-            window.setTimeout(timeoutSpy, 25);
-            window.emit('events');
-            window.$.ajax({
+            page.window.setTimeout(timeoutSpy, 25);
+            page.window.emit('events');
+            page.window.$.ajax({
               url: 'http://localhost:' + server.info.port + '/',
               complete: function() {
-                window.setTimeout(timeoutSpy, 10);
+                page.window.setTimeout(timeoutSpy, 10);
                 ajaxSpy();
               }
             });
@@ -270,9 +264,9 @@ describe('page', function() {
             path: '/foo'
           },
           index: __dirname + '/artifacts/empty-page.html',
-          loaded: function(err, window, $) {
+          loaded: function(page) {
             callback.should.be.false;
-            window.emit('events');
+            page.window.emit('events');
           },
           callback: function(err, html) {
             callback = true;
@@ -294,18 +288,16 @@ describe('page', function() {
 
       var page = fruitLoops.page({
         userAgent: 'anything but android',
-        url: {
-          path: '/foo'
-        },
+        path: '/foo',
         index: __dirname + '/artifacts/empty-page.html',
-        loaded: function(err, window, $) {
-          window.setTimeout(fail, 10);
-          window.$.ajax({
+        loaded: function(page) {
+          page.window.setTimeout(fail, 10);
+          page.window.$.ajax({
             url: 'http://localhost:' + server.info.port + '/',
             error: fail,
             complete: fail
           });
-          window.emit();
+          page.window.emit();
         },
         callback: function(err, html) {
           setTimeout(function() {
@@ -318,12 +310,10 @@ describe('page', function() {
     it('should fail on multiple', function(done) {
       var page = fruitLoops.page({
         userAgent: 'anything but android',
-        url: {
-          path: '/foo'
-        },
+        path: '/foo',
         index: __dirname + '/artifacts/empty-page.html',
-        loaded: function(err, window, $) {
-          window.emit();
+        loaded: function(page) {
+          page.window.emit();
         },
         callback: function(err, html) {
           should.throw(function() {
@@ -341,15 +331,11 @@ describe('page', function() {
 
       var page = fruitLoops.page({
         userAgent: 'anything but android',
-        url: {
-          path: '/foo'
-        },
+        path: '/foo',
         index: __dirname + '/artifacts/empty-page.html',
         finalize: finalize,
-        loaded: function(err, window) {
-          should.not.exist(err);
-
-          window.emit('events');
+        loaded: function(page) {
+          page.window.emit('events');
           setTimeout.clock.tick(1000);
         },
         callback: function(err, html) {
@@ -377,13 +363,11 @@ describe('page', function() {
 
       var page = fruitLoops.page({
         userAgent: 'anything but android',
-        url: {
-          path: '/foo'
-        },
+        path: '/foo',
         index: __dirname + '/artifacts/empty-page.html',
-        loaded: function(err, window) {
-          window.onEmit(spy);
-          window.emit();
+        loaded: function(page) {
+          page.window.onEmit(spy);
+          page.window.emit();
           setTimeout.clock.tick(1000);
         },
         callback: function(err, html) {
@@ -405,14 +389,12 @@ describe('page', function() {
       page = fruitLoops.page({
         userAgent: 'anything but android',
         cacheResources: true,
-        url: {
-          path: '/foo'
-        },
+        path: '/foo',
         index: __dirname + '/artifacts/script-page.html',
         resolver: resolver,
         loaded: function() {
           resolver.should
-              .have.been.calledWith('/test-script.js', page.window);
+              .have.been.calledWith('/test-script.js', page);
 
           page.window.inlinedVar.should.equal(1);
           page.window.externalVar.should.equal(3);
