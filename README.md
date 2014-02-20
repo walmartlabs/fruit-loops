@@ -212,8 +212,30 @@ Fruit loop implements a direct port of Zepto's `$.detect` library.
 #### Static Methods
 
 - `$.contains`
-- `$.trim`
+- `$.each`
+- `$.extend`
+- `$.grep`
+- `$.inArray`
+- `$.isArray`
+- `$.isFunction`
+- `$.isNumeric`
+- `$.isEmptyObject`
+- `$.isPlainObject`
+- `$.isWindow`
+- `$.makeArray`
+- `$.map`
+- `$.merge`
+- `$.noop`
+- `$.now`
 - `$.parseHTML`
+- `$.proxy`
+- `$.trim`
+- `$.type`
+
+Not implement:
+- `$.getScript`
+- `$.isXMLDoc`
+- `$.parseXML`
 
 ### DOM APIs
 
