@@ -38,6 +38,16 @@ FruitLoops.page({
 
 ## Page Lifecyle
 
+For a given page request cycle a few different stages occur, approximating the browser's life cycle.
+
+1. Page created
+1. Initial DOM is loaded
+1. (optional) `beforeExec` callback is run allowing the host to modify the page environment.
+1. Embedded scripts are executed
+   Scripts are executed sequentially and are blocking regardless of inlined or external. Currently `async` and `defer` attributes are ignored.
+1. (optional) `loaded` callback is executed
+1. Client code continues executing until emit occurs. See [Emit Behaviors](#emit-behaviors) below for details on this behavior.
+
 ### Emit Behaviors
 
 ## Performance
