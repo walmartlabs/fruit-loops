@@ -1,6 +1,6 @@
 # Fruit Loops
 
-Server-side jQuery API renderer.
+Provides a performant jquery-like environment for rendering of client-side SPA application within in node servers.
 
 ## Example
 
@@ -35,3 +35,21 @@ FruitLoops.page({
   }
 });
 ```
+
+## Page Lifecyle
+
+### Emit Behaviors
+
+## Performance
+
+## Public Rendering
+
+## Supported Features
+
+## Server APIs
+
+## Client APIs
+
+### $ APIs
+### DOM APIs
+### Fruit Loops Extensions
