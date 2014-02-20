@@ -181,6 +181,11 @@ The following APIs are supported and should match the [jQuery](http://api.jquery
 - `.hide`
 - `.focus` - Sets the `autofocus` attribute
 
+Not implemented:
+
+- `.prop`
+- `.removeProp`
+
 #### Event APIs
 
 Fruit loops implements stubs for:
