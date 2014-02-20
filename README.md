@@ -114,6 +114,101 @@ The returned page instance consists of:
 ## Client APIs
 
 ### $ APIs
+
+The following APIs are supported and should match the [jQuery](http://api.jquery.com/)/[Zepto](http://zeptojs.com/) implementation unless otherwise noted.
+
+#### Constructors
+
+- `$(selector)`
+- `$(fruit loops collection)`
+- `$(function() {})` / `.ready(function() {})`
+
+#### Tree Traversal
+
+- `.find`
+- `.parent`
+- `.parents`
+- `.closest`
+- `.next`
+- `.nextAll`
+- `.nextUntil`
+- `.prev`
+- `.prevAll`
+- `.prevUntil`
+- `.siblings`
+- `.children`
+- `.contents`
+- `.each`
+- `.forEach`
+- `.map`
+- `.filter`
+- `.first`
+- `.last`
+- `.eq`
+- `.get`
+- `.slice`
+- `.end`
+- `.toArray`
+
+#### Tree Manipulation
+
+- `.append`
+- `.prepend`
+- `.after`
+- `.before`
+- `.remove`
+- `.replaceWith`
+- `.empty`
+- `.html`
+- `.text`
+- `.clone`
+
+#### Node Manipulation
+
+- `.attr`
+- `.data`
+- `.val`
+- `.removeAttr`
+- `.hasClass`
+- `.addClass`
+- `.removeClass`
+- `.toggleClass`
+- `.is`
+- `.css`
+- `.toggle`
+- `.show`
+- `.hide`
+- `.focus` - Sets the `autofocus` attribute
+
+#### Event APIs
+
+Fruit loops implements stubs for:
+
+- `.bind`
+- `.unbind`
+- `.on`
+- `.off`
+- `.live`
+- `.die`
+- `.delegate`
+- `.undelegate`
+- `.one`
+
+Each of the above methods will perform no operations but may be chained.
+
+#### Detect
+
+Fruit loop implements a direct port of Zepto's `$.detect` library.
+
+#### AJAX
+#### Form
+#### Effects
+#### Static Methods
+
+- `$.contains`
+- `$.trim`
+- `$.parseHTML`
+
 ### DOM APIs
 
 In addition to the `$` APIs, Fruit Loops implements a variety of DOM and global browser APIs.
