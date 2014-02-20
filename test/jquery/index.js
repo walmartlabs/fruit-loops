@@ -7,6 +7,9 @@ describe('$', function() {
       inst;
   beforeEach(function() {
     window = {
+      toString: function() {
+        return '[object Window]';
+      },
       nextTick: function(callback) {
         callback();
       }
@@ -81,8 +84,8 @@ describe('$', function() {
 
       inst = $(window, '<div></div>');
       inst.$('html', window).length.should.equal(0);
-      // inst.$('head', window).length.should.equal(0);
-      // inst.$('body', window).length.should.equal(0);
+      inst.$('head', window).length.should.equal(0);
+      inst.$('body', window).length.should.equal(0);
     });
   });
 
