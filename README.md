@@ -68,7 +68,7 @@ Once the page has completed rendering it needs to notify the fruit-loops contain
 
 Both the immediate and ajax emit modes will wait for the next node event loop before emitting the page, allowing any pending operations to have a chance to complete. Note that these operations are not guaranteed to complete and critical behaviors generally should not rely on this timeout.
 
-Note that Fruit loops will cancel pending async behaviors once the page emit's it's contents. For ajax calls this means that the request will be aborted at whatever stage they are currently in. For `setTimeout` and `setImmediate` will be cleared by their respective clear API.
+Note that Fruit loops will cancel pending async behaviors once the page emit's its contents. For ajax calls this means that the request will be aborted at whatever stage they are currently in. For `setTimeout` and `setImmediate` will be cleared by their respective clear API.
 
 Once the emit process beings, the flow is as follows:
 
