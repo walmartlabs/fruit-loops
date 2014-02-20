@@ -124,4 +124,65 @@ describe('async', function() {
       });
     });
   });
+
+  describe('#setImmediate', function() {
+    it('should execute via setImmediate', function(done) {
+      page.window.setImmediate(function() {
+        setImmediate(function() {
+          exec.exec.should.have.been.called;
+          spy.should.not.have.been.called;
+
+          done();
+        });
+      });
+    });
+    it('should handle throws', function(done) {
+      var error;
+      page.window.setImmediate(function() {
+        error = new Error();
+        throw error;
+      });
+
+      setImmediate(function() {
+        exec.exec.should.have.been.called;
+        spy.should.have.been.calledWith(error);
+        done();
+      });
+    });
+    it('should clear on clearImmediate', function(done) {
+      var timeoutSpy = this.spy();
+      var timeout = page.window.setImmediate(timeoutSpy);
+      page.window.clearImmediate(timeout);
+
+      setImmediate(function() {
+        exec.exec.should.not.have.been.called;
+        timeoutSpy.should.not.have.been.called;
+        spy.should.not.have.been.called;
+        done();
+      });
+    });
+
+    it('should emit after all timeouts are complete', function(done) {
+      this.clock.restore();
+
+      var emit = this.spy(),
+          timeout = this.spy();
+      page = fruitLoops.page({
+        userAgent: 'anything but android',
+        url: {
+          path: '/foo'
+        },
+        index: __dirname + '/../artifacts/empty-page.html',
+        loaded: function() {
+          page.window.setImmediate(timeout, 10);
+          page.window.setImmediate(timeout, 100);
+          page.window.emit('events');
+        },
+        callback: function(err) {
+          timeout.should.have.been.calledTwice;
+          done();
+        }
+      });
+    });
+  });
 });
