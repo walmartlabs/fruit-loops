@@ -50,6 +50,33 @@ For a given page request cycle a few different stages occur, approximating the b
 
 ### Emit Behaviors
 
+Once the page has completed rendering it needs to notify the fruit-loops container that the response is ready for the user. This is done via the `emit` global method exposed in page's global on the the page object returned by the `#page` host API.
+
+`emit` supports one of three modes:
+
+- Immediate: `emit()`
+
+   Outputs the page immediately after this call is made.
+
+- AJAX completion: `emit('ajax')`
+
+   Outputs the page once all AJAX events have completed. If none are pending at the time this is called emits immediately.
+
+- Event loop cleared: `emit('events')`
+
+   Outputs the page once all async behaviors have completed. This is a superset of the AJAX completion mode, also waiting for all pending timeouts to complete prior to emitting. This mode is similar to Node's full process life cycle.
+
+Both the immediate and ajax emit modes will wait for the next node event loop before emitting the page, allowing any pending operations to have a chance to complete. Note that these operations are not guaranteed to complete and critical behaviors generally should not rely on this timeout.
+
+Note that Fruit loops will cancel pending async behaviors once the page emit's it's contents. For ajax calls this means that the request will be aborted at whatever stage they are currently in. For `setTimeout` and `setImmediate` will be cleared by their respective clear API.
+
+Once the emit process beings, the flow is as follows:
+
+1. All callbacks registered through `onEmit` are executed.
+1. All cancellable pending operations are canceled.
+1. (Optional) The `finalize` callback is called
+1. The current request's `callback` is called with the rendered HTML content
+
 ## Performance
 
 ## Public Rendering
