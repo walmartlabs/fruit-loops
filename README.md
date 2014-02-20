@@ -156,6 +156,7 @@ The following APIs are supported and should match the [jQuery](http://api.jquery
 - `.prepend`
 - `.after`
 - `.before`
+- `.detach`
 - `.remove`
 - `.replaceWith`
 - `.empty`
