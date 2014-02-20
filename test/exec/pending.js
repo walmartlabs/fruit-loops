@@ -51,6 +51,12 @@ describe('pending exec', function() {
       }, Error, 'Pending event test:413 not found.');
       popSpy.should.not.have.been.called;
     });
+    it('should not throw on not found', function() {
+      pending.push('test', 123, function() {});
+
+      pending.cancel('test', 413, true);
+      popSpy.should.not.have.been.called;
+    });
   });
 
   it('should reset pending events', function() {
