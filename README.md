@@ -115,6 +115,37 @@ The returned page instance consists of:
 
 ### $ APIs
 ### DOM APIs
+
+In addition to the `$` APIs, Fruit Loops implements a variety of DOM and global browser APIs.
+
+- `console`
+
+  Outputs to the process's console.
+
+- `setTimeout`
+- `document`
+  - `body`
+  - `querySelector`
+  - `querySelectorAll`
+  - `createElement`
+
+  The responses from these methods are generally `$` instances rather than true DOM objects.  Code that is expecting true DOM objects will need to be updated to account for this or otherwise utilize the `$` APIs.
+
+- `history`
+  - `pushState`
+  - `replaceState`
+
+  Note that both of these APIs perform a generic redirect and will terminate pending operations on the page.
+
+- `location`
+- `navigator`
+  - `userAgent`
+- `performance`
+  - `timing`
+- `localStorage`/`sessionStorage`
+
+  Transient storage for the duration of the page's life cycle. This is not persisted in any way.
+
 ### Fruit Loops Extensions
 
 - `$serverSide`
