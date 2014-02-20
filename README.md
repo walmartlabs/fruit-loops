@@ -111,6 +111,18 @@ The returned page instance consists of:
 - `dispose()`: Should be called after a page is no longer needed in order to clean up resources.
 - `navigate(path, callback)`: Updates the existing page to point to a new path. This will clear a variety of the page's state and should only be done for pages that expect this behavior. See the [performance](#performance) section for further discussion.
 
+
+### `page.$.ajax`
+
+There are a number of utility methods exposed on the node-side ajax instance including:
+
+- `.allComplete` Returns `true` if there are no requests currently waiting.
+- `.toJSON` Returns a stringified JSON object containing the response content from all requests involved in the page.
+- `.minimumCache` Returns a structure containing the minimum cache of all requests. Contains
+  - `no-cache`: Truthy if the response is not cacheable
+  - `private`: Truthy if the response must be private cached
+  - `expires`: Number of seconds that the response should expire in. `Number.MAX_VALUE` if no content contained a cache expiration.
+
 ## Client APIs
 
 ### $ APIs
@@ -207,6 +219,18 @@ Each of the above methods will perform no operations but may be chained.
 Fruit loop implements a direct port of Zepto's `$.detect` library.
 
 #### AJAX
+
+- `$.ajax`
+- `$.param`
+
+Not currently supported:
+- `$.ajaxJSONP`
+- `$.ajaxSettings`
+- `$.get`
+- `$.getJSON`
+- `$.post`
+- `.load`
+
 #### Form
 #### Effects
 #### Static Methods
