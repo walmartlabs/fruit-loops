@@ -150,6 +150,9 @@ The following APIs are supported and should match the [jQuery](http://api.jquery
 - `.siblings`
 - `.children`
 - `.contents`
+
+# Set Handling
+
 - `.each`
 - `.forEach`
 - `.map`
@@ -161,6 +164,7 @@ The following APIs are supported and should match the [jQuery](http://api.jquery
 - `.slice`
 - `.end`
 - `.toArray`
+- `.pluck`
 
 #### Tree Manipulation
 
@@ -195,6 +199,17 @@ The following APIs are supported and should match the [jQuery](http://api.jquery
 
 Not implemented:
 
+- `.height`
+- `.innerHeight`
+- `.innerWidth`
+- `.offset`
+- `.offsetParent`
+- `.outerHeight`
+- `.outerWidth`
+- `.position`
+- `.scrollLeft`
+- `.scrollTop`
+- `.width`
 - `.prop`
 - `.removeProp`
 
@@ -213,6 +228,33 @@ Fruit loops implements stubs for:
 - `.one`
 
 Each of the above methods will perform no operations but may be chained.
+
+Methods designed to trigger events are explicitly not implemented.
+
+- `.change`
+- `.click`
+- `.dblclick`
+- `.error`
+- `.focusin`
+- `.focusout`
+- `.hover`
+- `.keydown`
+- `.keypress`
+- `.keyup`
+- `.mousedown`
+- `.mouseenter`
+- `.mouseleave`
+- `.mousemove`
+- `.mouseout`
+- `.mouseover`
+- `.mouseup`
+- `.resize`
+- `.scroll`
+- `.select`
+- `.trigger`
+- `.triggerHandler`
+- `.submit`
+- `.unload`
 
 #### Detect
 
