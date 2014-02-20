@@ -116,3 +116,24 @@ The returned page instance consists of:
 ### $ APIs
 ### DOM APIs
 ### Fruit Loops Extensions
+
+- `$serverSide`
+
+  Constant flag. Set to `true`, allowing client code to differentiate between client and server contexts.
+
+- `emit(action)`
+
+   Begins the page output process. See [emit behaviors](#emit-behaviors) for more details.
+
+- `loadInContext(href, callback)`
+
+   Loads a given script. `href` should be a relative client script path. The `resolver` callback may be be used to remap this if needed. Upon completion `callback()` will be called.
+
+- `setImmediate(callback)`
+
+  Exposes node's `setImmediate` API. Allows for more performant timeout calls vs. `setTimeout` without a timeout.
+
+- `nextTick(callback)`
+
+  Exposes node's `nextTick` API. This is not cancellable and `nextTick` calls made during the final cycle before an emit are not guaranteed to be cancelled or execute properly. `setImmediate` is preferred in most case.
+
