@@ -196,6 +196,7 @@ The following APIs are supported and should match the [jQuery](http://api.jquery
 - `.show`
 - `.hide`
 - `.focus` - Sets the `autofocus` attribute
+- `.blur` - Unsets the `autofocus` attribute
 
 Not implemented:
 
