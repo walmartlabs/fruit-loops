@@ -276,6 +276,11 @@ Not currently supported:
 
 #### Form
 #### Effects
+
+Effects APIs are generally not support in fruit loops. The exception being:
+
+- `.animate` - Implements immediate set operation
+
 #### Static Methods
 
 - `$.contains`
