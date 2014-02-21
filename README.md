@@ -275,6 +275,13 @@ Not currently supported:
 - `.load`
 
 #### Form
+
+Form handling methods are not supported at this time. This includes:
+
+- `.serialize`
+- `.serializeArray`
+- `.submit`
+
 #### Effects
 
 Effects APIs are generally not support in fruit loops. The exception being:
