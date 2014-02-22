@@ -16,7 +16,7 @@
   "main": "./lib",
   "dependencies": {
     "async": "~0.2.9",
-    "cheerio": "0.13.1",
+    "cheerio": "git://github.com/kpdecker/cheerio.git",
     "contextify": "~0.1.6",
     "lodash": "~2.4.1",
     "nipple": "~2.2.0",
