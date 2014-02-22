@@ -370,6 +370,7 @@ Effects APIs are generally not support in fruit loops. The exception being:
 - `$.contains`
 - `$.each`
 - `$.extend`
+- `$.globalEval`
 - `$.grep`
 - `$.inArray`
 - `$.isArray`
