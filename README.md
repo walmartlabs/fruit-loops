@@ -111,9 +111,211 @@ The returned page instance consists of:
 - `dispose()`: Should be called after a page is no longer needed in order to clean up resources.
 - `navigate(path, callback)`: Updates the existing page to point to a new path. This will clear a variety of the page's state and should only be done for pages that expect this behavior. See the [performance](#performance) section for further discussion.
 
+
+### `page.$.ajax`
+
+There are a number of utility methods exposed on the node-side ajax instance including:
+
+- `.allComplete` Returns `true` if there are no requests currently waiting.
+- `.toJSON` Returns a stringified JSON object containing the response content from all requests involved in the page.
+- `.minimumCache` Returns a structure containing the minimum cache of all requests. Contains
+  - `no-cache`: Truthy if the response is not cacheable
+  - `private`: Truthy if the response must be private cached
+  - `expires`: Number of seconds that the response should expire in. `Number.MAX_VALUE` if no content contained a cache expiration.
+
 ## Client APIs
 
 ### $ APIs
+
+The following APIs are supported and should match the [jQuery](http://api.jquery.com/)/[Zepto](http://zeptojs.com/) implementation unless otherwise noted.
+
+#### Constructors
+
+- `$(selector)`
+- `$(fruit loops collection)`
+- `$(function() {})` / `.ready(function() {})`
+
+#### Tree Traversal
+
+- `.find`
+- `.parent`
+- `.parents`
+- `.closest`
+- `.next`
+- `.nextAll`
+- `.nextUntil`
+- `.prev`
+- `.prevAll`
+- `.prevUntil`
+- `.siblings`
+- `.children`
+- `.contents`
+
+# Set Handling
+
+- `.each`
+- `.forEach`
+- `.map`
+- `.filter`
+- `.first`
+- `.last`
+- `.eq`
+- `.get`
+- `.slice`
+- `.end`
+- `.toArray`
+- `.pluck`
+
+#### Tree Manipulation
+
+- `.append`
+- `.prepend`
+- `.after`
+- `.before`
+- `.detach`
+- `.remove`
+- `.replaceWith`
+- `.empty`
+- `.html`
+- `.text`
+- `.clone`
+
+#### Node Manipulation
+
+- `.attr`
+- `.data`
+- `.val`
+- `.removeAttr`
+- `.hasClass`
+- `.addClass`
+- `.removeClass`
+- `.toggleClass`
+- `.is`
+- `.css`
+- `.toggle`
+- `.show`
+- `.hide`
+- `.focus` - Sets the `autofocus` attribute
+- `.blur` - Unsets the `autofocus` attribute
+
+Not implemented:
+
+- `.height`
+- `.innerHeight`
+- `.innerWidth`
+- `.offset`
+- `.offsetParent`
+- `.outerHeight`
+- `.outerWidth`
+- `.position`
+- `.scrollLeft`
+- `.scrollTop`
+- `.width`
+- `.prop`
+- `.removeProp`
+
+#### Event APIs
+
+Fruit loops implements stubs for:
+
+- `.bind`
+- `.unbind`
+- `.on`
+- `.off`
+- `.live`
+- `.die`
+- `.delegate`
+- `.undelegate`
+- `.one`
+
+Each of the above methods will perform no operations but may be chained.
+
+Methods designed to trigger events are explicitly not implemented.
+
+- `.change`
+- `.click`
+- `.dblclick`
+- `.error`
+- `.focusin`
+- `.focusout`
+- `.hover`
+- `.keydown`
+- `.keypress`
+- `.keyup`
+- `.mousedown`
+- `.mouseenter`
+- `.mouseleave`
+- `.mousemove`
+- `.mouseout`
+- `.mouseover`
+- `.mouseup`
+- `.resize`
+- `.scroll`
+- `.select`
+- `.trigger`
+- `.triggerHandler`
+- `.submit`
+- `.unload`
+
+#### Detect
+
+Fruit loop implements a direct port of Zepto's `$.detect` library.
+
+#### AJAX
+
+- `$.ajax`
+- `$.param`
+
+Not currently supported:
+- `$.ajaxJSONP`
+- `$.ajaxSettings`
+- `$.get`
+- `$.getJSON`
+- `$.post`
+- `.load`
+
+#### Form
+
+Form handling methods are not supported at this time. This includes:
+
+- `.serialize`
+- `.serializeArray`
+- `.submit`
+
+#### Effects
+
+Effects APIs are generally not support in fruit loops. The exception being:
+
+- `.animate` - Implements immediate set operation
+
+#### Static Methods
+
+- `$.contains`
+- `$.each`
+- `$.extend`
+- `$.grep`
+- `$.inArray`
+- `$.isArray`
+- `$.isFunction`
+- `$.isNumeric`
+- `$.isEmptyObject`
+- `$.isPlainObject`
+- `$.isWindow`
+- `$.makeArray`
+- `$.map`
+- `$.merge`
+- `$.noop`
+- `$.now`
+- `$.parseHTML`
+- `$.proxy`
+- `$.trim`
+- `$.type`
+
+Not implement:
+- `$.getScript`
+- `$.isXMLDoc`
+- `$.parseXML`
+
 ### DOM APIs
 
 In addition to the `$` APIs, Fruit Loops implements a variety of DOM and global browser APIs.
