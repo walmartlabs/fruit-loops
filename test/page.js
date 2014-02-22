@@ -153,6 +153,39 @@ describe('page', function() {
       });
     });
 
+
+    // Ensures that we have this fix:
+    // https://github.com/MatthewMueller/cheerio/pull/350
+    it('should move scripts to the end of the body', function(done) {
+      var finalize = this.spy();
+
+      var page = fruitLoops.page({
+        userAgent: 'anything but android',
+        path: '/foo',
+        index: __dirname + '/artifacts/script-page.html',
+        finalize: finalize,
+        loaded: function(page) {
+          page.window.emit();
+          setTimeout.clock.tick(1000);
+        },
+        callback: function(err, html) {
+          finalize.should.have.been.calledOnce;
+          finalize.should.have.been.calledWith(page);
+
+          should.not.exist(err);
+          html.should.equal('<!doctype html>\n'
+              + '<html>\n'
+              + '  <body>\n    \n    \n    \n'
+              + '  <script>var $serverCache = {};</script>'
+              + '<script>var inlinedVar = 1;</script>'
+              + '<script src="/test-script.js"></script>'
+              + '<script>var syncVar = externalVar + 1;</script>'
+              + '</body>\n</html>\n');
+          done();
+        }
+      });
+    });
+
     describe('ajax completion', function() {
       it('should allow emit on AJAX completion', function(done) {
         var test = this,
