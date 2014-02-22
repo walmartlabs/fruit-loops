@@ -1,6 +1,6 @@
 # Fruit Loops
 
-Provides a performant jquery-like environment for rendering of client-side SPA application within node servers.
+Provides a performant jQuery-like environment for rendering of client-side SPA application within node servers.
 
 ## Example
 
