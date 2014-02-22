@@ -308,6 +308,10 @@ describe('page', function() {
     });
 
     it('should fail on multiple', function(done) {
+      this.stub(global, 'setImmediate', function(callback) {
+        callback();
+      });
+
       var page = fruitLoops.page({
         userAgent: 'anything but android',
         path: '/foo',
