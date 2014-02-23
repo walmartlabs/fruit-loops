@@ -406,6 +406,38 @@ describe('page', function() {
           }
         });
       });
+
+      it('on error in loader', function(done) {
+        this.clock.restore();
+
+        function fail() {
+          throw new Error('This was called');
+        }
+
+        page = fruitLoops.page({
+          userAgent: 'anything but android',
+          path: '/foo',
+          index: __dirname + '/artifacts/script-page.html',
+          resolver: function() {
+            return __dirname + '/artifacts/not-found.js';
+          },
+          beforeExec: function(page, next) {
+            page.window.setTimeout(fail, 10);
+            page.window.$.ajax({
+              url: 'http://localhost:' + server.info.port + '/',
+              error: fail,
+              complete: fail
+            });
+            next();
+          },
+          callback: function(err, html) {
+            err.toString().should.match(/ENOENT/);
+            setTimeout(function() {
+              done();
+            }, 100);
+          }
+        });
+      });
     });
 
     it('should fail on multiple', function(done) {
