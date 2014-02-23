@@ -5,7 +5,8 @@ var fruitLoops = require('../lib'),
     sinon = require('sinon');
 
 describe('page', function() {
-  var server;
+  var server,
+      page;
   before(function(done) {
     server = new hapi.Server(0);
     server.route({
@@ -23,9 +24,13 @@ describe('page', function() {
   after(function(done) {
     server.stop(done);
   });
+  afterEach(function() {
+    page.dispose();
+    page = undefined;
+  });
 
   it('should load html source', function(done) {
-    var page = fruitLoops.page({
+    page = fruitLoops.page({
       userAgent: 'anything but android',
       url: {
         path: '/foo'
@@ -39,7 +44,7 @@ describe('page', function() {
     });
   });
   it('should handle page load errors', function(done) {
-    var page = fruitLoops.page({
+    page = fruitLoops.page({
       userAgent: 'anything but android',
       url: {
         path: '/foo'
@@ -53,7 +58,7 @@ describe('page', function() {
   });
   it('should callback before script init', function(done) {
     var execCalled;
-    var page = fruitLoops.page({
+    page = fruitLoops.page({
       userAgent: 'anything but android',
       url: {
         path: '/foo'
@@ -74,7 +79,7 @@ describe('page', function() {
     });
   });
   it('should load all inlined scripts', function(done) {
-    var page = fruitLoops.page({
+    page = fruitLoops.page({
       userAgent: 'anything but android',
       url: {
         path: '/foo'
@@ -93,7 +98,7 @@ describe('page', function() {
       return __dirname + '/artifacts/other-script.js';
     });
 
-    var page = fruitLoops.page({
+    page = fruitLoops.page({
       userAgent: 'anything but android',
       url: '/foo',
       index: __dirname + '/artifacts/script-page.html',
@@ -113,7 +118,7 @@ describe('page', function() {
   it('should error on missing scripts', function(done) {
     var callback = this.spy();
 
-    var page = fruitLoops.page({
+    page = fruitLoops.page({
       userAgent: 'anything but android',
       url: {
         path: '/foo'
@@ -133,7 +138,7 @@ describe('page', function() {
     it('should output on emit call', function(done) {
       var finalize = this.spy();
 
-      var page = fruitLoops.page({
+      page = fruitLoops.page({
         userAgent: 'anything but android',
         path: '/foo',
         index: __dirname + '/artifacts/empty-page.html',
@@ -159,7 +164,7 @@ describe('page', function() {
     it('should move scripts to the end of the body', function(done) {
       var finalize = this.spy();
 
-      var page = fruitLoops.page({
+      page = fruitLoops.page({
         userAgent: 'anything but android',
         path: '/foo',
         index: __dirname + '/artifacts/script-page.html',
@@ -193,7 +198,7 @@ describe('page', function() {
             allComplete = false,
             callback = false;
 
-        var page = fruitLoops.page({
+        page = fruitLoops.page({
           userAgent: 'anything but android',
           url: {
             path: '/foo'
@@ -227,7 +232,7 @@ describe('page', function() {
         var test = this,
             callback = false;
 
-        var page = fruitLoops.page({
+        page = fruitLoops.page({
           userAgent: 'anything but android',
           url: {
             path: '/foo'
@@ -256,7 +261,7 @@ describe('page', function() {
             ajaxSpy = this.spy(),
             callback = false;
 
-        var page = fruitLoops.page({
+        page = fruitLoops.page({
           userAgent: 'anything but android',
           url: {
             path: '/foo'
@@ -291,7 +296,7 @@ describe('page', function() {
       it('should emit events if no events pending', function(done) {
         var callback = false;
 
-        var page = fruitLoops.page({
+        page = fruitLoops.page({
           userAgent: 'anything but android',
           url: {
             path: '/foo'
@@ -319,7 +324,7 @@ describe('page', function() {
         throw new Error('This was called');
       }
 
-      var page = fruitLoops.page({
+      page = fruitLoops.page({
         userAgent: 'anything but android',
         path: '/foo',
         index: __dirname + '/artifacts/empty-page.html',
@@ -345,7 +350,7 @@ describe('page', function() {
         callback();
       });
 
-      var page = fruitLoops.page({
+      page = fruitLoops.page({
         userAgent: 'anything but android',
         path: '/foo',
         index: __dirname + '/artifacts/empty-page.html',
@@ -366,7 +371,7 @@ describe('page', function() {
       var finalize = this.spy(),
           firstEmitSeen;
 
-      var page = fruitLoops.page({
+      page = fruitLoops.page({
         userAgent: 'anything but android',
         path: '/foo',
         index: __dirname + '/artifacts/empty-page.html',
@@ -398,7 +403,7 @@ describe('page', function() {
     it('should call onEmit callbacks', function(done) {
       var spy = this.spy();
 
-      var page = fruitLoops.page({
+      page = fruitLoops.page({
         userAgent: 'anything but android',
         path: '/foo',
         index: __dirname + '/artifacts/empty-page.html',
@@ -421,7 +426,6 @@ describe('page', function() {
     });
     this.spy(fs, 'readFile');
 
-    var page;
     function exec(loaded) {
       page = fruitLoops.page({
         userAgent: 'anything but android',
