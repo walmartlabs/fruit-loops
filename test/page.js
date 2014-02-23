@@ -1,4 +1,5 @@
 var fruitLoops = require('../lib'),
+    ajax = require('../lib/jquery/ajax'),
     exec = require('../lib/exec'),
     fs = require('fs'),
     hapi = require('hapi'),
@@ -27,6 +28,8 @@ describe('page', function() {
   afterEach(function() {
     page.dispose();
     page = undefined;
+
+    ajax.reset();
   });
 
   it('should load html source', function(done) {
@@ -317,31 +320,91 @@ describe('page', function() {
       });
     });
 
-    it('should terminate pending', function(done) {
-      this.clock.restore();
+    describe('terminate pending', function() {
+      it('on emit', function(done) {
+        this.clock.restore();
 
-      function fail() {
-        throw new Error('This was called');
-      }
-
-      page = fruitLoops.page({
-        userAgent: 'anything but android',
-        path: '/foo',
-        index: __dirname + '/artifacts/empty-page.html',
-        loaded: function(page) {
-          page.window.setTimeout(fail, 10);
-          page.window.$.ajax({
-            url: 'http://localhost:' + server.info.port + '/',
-            error: fail,
-            complete: fail
-          });
-          page.window.emit();
-        },
-        callback: function(err, html) {
-          setTimeout(function() {
-            done();
-          }, 100);
+        function fail() {
+          throw new Error('This was called');
         }
+
+        page = fruitLoops.page({
+          userAgent: 'anything but android',
+          path: '/foo',
+          index: __dirname + '/artifacts/empty-page.html',
+          loaded: function(page) {
+            page.window.setTimeout(fail, 10);
+            page.window.$.ajax({
+              url: 'http://localhost:' + server.info.port + '/',
+              error: fail,
+              complete: fail
+            });
+            page.window.emit();
+          },
+          callback: function(err, html) {
+            setTimeout(function() {
+              done();
+            }, 100);
+          }
+        });
+      });
+      it('on redirect', function(done) {
+        this.clock.restore();
+
+        function fail() {
+          throw new Error('This was called');
+        }
+
+        page = fruitLoops.page({
+          userAgent: 'anything but android',
+          path: '/foo',
+          index: __dirname + '/artifacts/empty-page.html',
+          loaded: function(page) {
+            page.window.setTimeout(fail, 10);
+            page.window.$.ajax({
+              url: 'http://localhost:' + server.info.port + '/',
+              error: fail,
+              complete: fail
+            });
+            page.window.location.assign('/bar');
+          },
+          callback: function(err, html) {
+            html.should.eql({redirect: '/bar'});
+            setTimeout(function() {
+              done();
+            }, 100);
+          }
+        });
+      });
+      it('on error', function(done) {
+        this.clock.restore();
+
+        function fail() {
+          throw new Error('This was called');
+        }
+
+        page = fruitLoops.page({
+          userAgent: 'anything but android',
+          path: '/foo',
+          index: __dirname + '/artifacts/empty-page.html',
+          loaded: function(page) {
+            page.window.setTimeout(fail, 10);
+            page.window.$.ajax({
+              url: 'http://localhost:' + server.info.port + '/',
+              error: fail,
+              complete: fail
+            });
+            page.exec(function() {
+              throw new Error('You fail');
+            });
+          },
+          callback: function(err, html) {
+            err.toString().should.match(/You fail/);
+            setTimeout(function() {
+              done();
+            }, 100);
+          }
+        });
       });
     });
 
