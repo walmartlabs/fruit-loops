@@ -77,11 +77,47 @@ Once the emit process beings, the flow is as follows:
 1. (Optional) The `finalize` callback is called
 1. The current request's `callback` is called with the rendered HTML content
 
-## Performance
+## Public Only Rendering
 
-## Public Rendering
+One of the primary goals for Fruit Loops is to enable rendering of public only data. This allows for the server-side tier to handle the SEO concerns and fast load of common content and the client tier can handle augmenting the initial HTML payload with time or user specific data.
+
+In many situations this architecture allows for the burden of rendering a page to be pushed out to the CDN and client tier rather than forcing the server to handle all pages.
+
+With this goal in mind Fruit Loops does not currently support features like cookie propagation to the AJAX layer or persistence of the `localStorage` and `sessionStorage` shims. PRs are accepted for this of course.
 
 ## Supported Features
+
+Due to differences in the goals of server vs. client rendering, Fruit Loops does not support the following behaviors that might be available within a full browser environment.
+
+- Most DOM APIs, particularly DOM events
+- Layout calculation
+- `setInterval`
+- Persistent storage
+- Cookies
+
+As such there are some jQuery APIs that are not implemented when running within a fruit-loops context. See [Client APIs](#client-apis) for the complete list of supported APIs.
+
+There are three different methods generally available for handling the differences between the two tiers.
+
+1. Feature detection: Most of the unsupported features are simply not implemented vs. stubed for failure. Any such features can be omitted from the server execution flow simply by using standard feature detection practices.
+1. `$serverSide` global conditional: The global `$serverSide` is set to true on within Fruit Loops page environments and may be used for controlling conditional behavior. It's recommended that these be compiled out using a tool such a Uglify's [conditional compilation](https://github.com/mishoo/UglifyJS2#conditional-compilation) to avoid overhead in one environment or the other.
+1. Server-specific build resolution: If using a tool such as [Lumbar](https://github.com/walmartlabs/lumbar), a server-specific build may be created and loaded via a [`resolver`](#pageoptions) that loads the server specific build.
+
+It's highly recommended that a framework such as [Thorax](http://thoraxjs.org) be used as this abstracts away many of the differences between the two environments but this is not required.
+
+## Performance
+
+Even though the Fruit Loops strives for an environment with minimal differences between the client and server there are a number of performance concerns that are either specific to the server-side or exacerbated by execution on the server.
+
+The two biggest performance concerns that have been seen are initialization time and overhead due to rendering otherwise hidden content on the server side.
+
+### Initialization Time
+
+Creating the sandbox and initializing the client SPA infrastructure takes a bit of time and can also lead to confusion for the optimizer. Users that are rendering in a public only system and whose application support safely transitioning between pages via the `navigate` API may want to consider pooling and reusing page instances to avoid unnecessary overhead from repeated operations.
+
+### Unnecessary Operations
+
+Things like rendering menus and other initially hidden content all add to the CPU load necessary for parsing the content. While this is a concern for the client-side rendering as well this is much more noticable when rendering on the server when all requests share the same event loop. It's recommended that any operations that won't generate meaningful content for the user on the initial load be setup so that the rendering is deferred until the point that it is needed. Generally this optimization should improve the initial load experience for both client and server environments.
 
 ## Node APIs
 
