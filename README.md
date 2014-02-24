@@ -26,11 +26,11 @@ FruitLoops.page({
     return href;
   },
 
-  callback: function(err, data) {
+  callback: function(err, html) {
     if (err) {
       reply(err);
     } else {
-      reply(data);
+      reply(html);
     }
   }
 });
@@ -166,6 +166,9 @@ The returned pool instance consists of:
     index: __dirname + '/artifacts/pool-page.html',
     navigated: function(page, existingPage) {
       if (existingPage) {
+        // We need to reset the location value as backbone caches it
+        page.window.Backbone.history.location = page.window.location;
+
         // Force backbone navigation if the page has been previously used.
         page.window.Backbone.history.loadUrl();
       }
@@ -175,7 +178,7 @@ The returned pool instance consists of:
     if (err) {
       reply(err);
     } else {
-      reply(data);
+      reply(html);
     }
   });
 ```
