@@ -59,6 +59,29 @@ describe('pending exec', function() {
     });
   });
 
+  describe('#wrap', function() {
+    it('should provide exec method', function() {
+      var spy = this.spy();
+
+      var wrap = pending.wrap('test', 123, spy);
+      spy.should.not.have.been.called;
+
+      wrap();
+      spy.should.have.been.calledOnce;
+    });
+    it('should prevent exec on cancel', function() {
+      var spy = this.spy();
+
+      var wrap = pending.wrap('test', 123, spy);
+      spy.should.not.have.been.called;
+
+      pending.cancel('test', 123);
+
+      wrap();
+      spy.should.not.have.been.called;
+    });
+  });
+
   it('should reset pending events', function() {
     var spy = this.spy(),
         spy2 = this.spy();
