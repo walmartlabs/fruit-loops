@@ -1,0 +1,11 @@
+<!doctype html>
+<html>
+  <body>
+    <div class="location-info"></div>
+    <script>
+      function navigated() {
+        $('.location-info').text(location.toString() + ' ' + loadedCallback);
+      }
+    </script>
+  </body>
+</html>
