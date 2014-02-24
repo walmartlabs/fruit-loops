@@ -136,6 +136,58 @@ describe('page', function() {
     });
   });
 
+  it('should prevent exec on error in external script', function(done) {
+    this.clock.restore();
+
+    page = fruitLoops.page({
+      userAgent: 'anything but android',
+      index: __dirname + '/artifacts/script-page.html',
+      resolver: function() {
+        return __dirname + '/artifacts/error-script.js';
+      },
+      callback: function(err) {
+        err.should.be.instanceOf(Error);
+        err.toString().should.match(/error-script expected/);
+
+        setTimeout(done, 100);
+      }
+    });
+  });
+  it('should prevent exec on error in internal script', function(done) {
+    this.clock.restore();
+
+    page = fruitLoops.page({
+      userAgent: 'anything but android',
+      index: __dirname + '/artifacts/inline-script-error.html',
+      callback: function(err) {
+        err.should.be.instanceOf(Error);
+        err.toString().should.match(/Expected/);
+
+        setTimeout(done, 100);
+      }
+    });
+  });
+  it('should prevent exec on error in onEmit callback', function(done) {
+    this.clock.restore();
+
+    page = fruitLoops.page({
+      userAgent: 'anything but android',
+      index: __dirname + '/artifacts/script-page.html',
+      loaded: function(page) {
+        page.window.onEmit(function() {
+          throw new Error('onEmit expected');
+        });
+        page.emit();
+      },
+      callback: function(err) {
+        err.should.be.instanceOf(Error);
+        err.toString().should.match(/onEmit expected/);
+
+        setTimeout(done, 100);
+      }
+    });
+  });
+
   describe('#emit', function() {
     it('should output on emit call', function(done) {
       var finalize = this.spy();
