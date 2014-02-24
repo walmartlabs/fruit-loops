@@ -161,7 +161,7 @@ The returned pool instance consists of:
 - `dispose()`: Should be called after a pool is no longer needed in order to clean up resources.
 
 ```javascript
-  FruitLoops.pool({
+  var pool = FruitLoops.pool({
     poolSize: 2,
     index: __dirname + '/artifacts/pool-page.html',
     navigated: function(page, existingPage) {
@@ -169,6 +169,13 @@ The returned pool instance consists of:
         // Force backbone navigation if the page has been previously used.
         page.window.Backbone.history.loadUrl();
       }
+    }
+  });
+  pool.navigate('/bar', function(err, html) {
+    if (err) {
+      reply(err);
+    } else {
+      reply(data);
     }
   });
 ```
