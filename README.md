@@ -26,11 +26,11 @@ FruitLoops.page({
     return href;
   },
 
-  callback: function(err, data) {
+  callback: function(err, html) {
     if (err) {
       reply(err);
     } else {
-      reply(data);
+      reply(html);
     }
   }
 });
@@ -147,6 +147,41 @@ The returned page instance consists of:
 - `dispose()`: Should be called after a page is no longer needed in order to clean up resources.
 - `navigate(path, callback)`: Updates the existing page to point to a new path. This will clear a variety of the page's state and should only be done for pages that expect this behavior. See the [performance](#performance) section for further discussion.
 
+### `#pool(options)`
+
+Creates a pool of page objects.
+
+Shares the same options as the `page` method with a few distinctions:
+- `path` and `callback` will be ignored. The values passed to `navigate` will be used instead.
+- Adds the `poolSize` option used to specify the number of pages to create at once.
+- Adds `navigated(page, existingPage)` callback which is called after a page is reused. This should be used to notify the application that the path has changed, i.e. `Backbone.history.loadUrl()` or similar. Will be called for all `pool.navigated` calls. `existingPage` will be true when the page has been used in a previous render cycle.
+
+The returned pool instance consists of:
+- `navigate(path, callback)`: Renders a given path and returns it to callback.
+- `dispose()`: Should be called after a pool is no longer needed in order to clean up resources.
+
+```javascript
+  var pool = FruitLoops.pool({
+    poolSize: 2,
+    index: __dirname + '/artifacts/pool-page.html',
+    navigated: function(page, existingPage) {
+      if (existingPage) {
+        // We need to reset the location value as backbone caches it
+        page.window.Backbone.history.location = page.window.location;
+
+        // Force backbone navigation if the page has been previously used.
+        page.window.Backbone.history.loadUrl();
+      }
+    }
+  });
+  pool.navigate('/bar', function(err, html) {
+    if (err) {
+      reply(err);
+    } else {
+      reply(html);
+    }
+  });
+```
 
 ### `page.$.ajax`
 
