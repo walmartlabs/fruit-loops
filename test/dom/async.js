@@ -79,6 +79,16 @@ describe('async', function() {
       timeoutSpy.should.have.been.calledOnce;
       spy.should.not.have.been.called;
     });
+    it('should execute via setTimeout with args', function() {
+      var timeoutSpy = this.spy();
+      page.window.setTimeout(timeoutSpy, 10, 3, 2, 1);
+      this.clock.tick(100);
+
+      exec.exec.should.have.been.called;
+      timeoutSpy.should.have.been.calledOnce;
+      timeoutSpy.should.have.been.calledWith(3, 2, 1);
+      spy.should.not.have.been.called;
+    });
     it('should handle throws', function() {
       var error;
       page.window.setTimeout(function() {
