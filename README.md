@@ -136,7 +136,7 @@ Available options:
 - `protocol`: Used to generate the `window.location` object. Defaults to `http:`
 - `path`: Path of the page, including any query or hash information. The should be relative to the host's root.
 - `userAgent`: Use agent value used to seed the `window.navigator.userAgent` value.
-- `chaceResources`: Truthy to cache script and page resources within the javascript heap. When this is enabled, no attempt will be made to reload content from disk after it's initially loaded/parsed.
+- `cacheResources`: Truthy to cache script and page resources within the javascript heap. When this is enabled, no attempt will be made to reload content from disk after it's initially loaded/parsed.
 
 The returned page instance consists of:
 - `id`: Unique id value that may be used to identify the page
