@@ -445,5 +445,5 @@ In addition to the `$` APIs, Fruit Loops implements a variety of DOM and global 
 
 - `nextTick(callback)`
 
-  Exposes node's `nextTick` API. This is not cancellable and `nextTick` calls made during the final cycle before an emit are not guaranteed to be cancelled or execute properly. `setImmediate` is preferred in most case.
+  Exposes node's `nextTick` API. `setImmediate` is preferred in most case as `nextTick` can lead to IO starvation.
 

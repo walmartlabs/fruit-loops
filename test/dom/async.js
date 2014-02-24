@@ -41,6 +41,21 @@ describe('async', function() {
       spy.firstCall.args[0].should.match(/Expected!/);
     });
 
+    it('should cancel exec', function() {
+      var callback;
+      this.stub(process, 'nextTick', function(_callback) { callback = _callback; });
+
+      var timeoutSpy = this.spy();
+      page.window.nextTick(timeoutSpy);
+
+      page.pending.reset();
+      callback();
+
+      exec.exec.should.not.have.been.called;
+      timeoutSpy.should.not.have.been.called;
+      spy.should.not.have.been.called;
+    });
+
     it('should emit after all timeouts are complete', function(done) {
       this.clock.restore();
 
