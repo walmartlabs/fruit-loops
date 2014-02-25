@@ -35,41 +35,53 @@ describe('cheerio-shim', function() {
   describe('#appendTo', function() {
     it('should insert into', function() {
       inst.$('<span>red</span>').appendTo(inst.$('body'));
-      inst.$('body').html().should.equal('<div></div><div></div><span>red</span>')
+      inst.$('body').html().should.equal('<div></div><div></div><span>red</span>');
     });
     it('should insert int selector', function() {
       inst.$('<span>red</span>').appendTo('body');
-      inst.$('body').html().should.equal('<div></div><div></div><span>red</span>')
+      inst.$('body').html().should.equal('<div></div><div></div><span>red</span>');
     });
   });
   describe('#insertAfter', function() {
     it('should insert after', function() {
+      // WARN: Hacking around a cheerio bug
+      // https://github.com/MatthewMueller/cheerio/issues/368
+      inst = $(window, '<body><div></div></body>');
       inst.$('<span>red</span>').insertAfter(inst.$('div'));
-      inst.$('body').html().should.equal('<div></div><span>red</span><div></div><span>red</span>')
+      inst.$('body').html().should.equal('<div></div><span>red</span>');
     });
     it('should insert after selector', function() {
+      // WARN: Hacking around a cheerio bug
+      // https://github.com/MatthewMueller/cheerio/issues/368
+      inst = $(window, '<body><div></div></body>');
       inst.$('<span>red</span>').insertAfter('div');
-      inst.$('body').html().should.equal('<div></div><span>red</span><div></div><span>red</span>')
+      inst.$('body').html().should.equal('<div></div><span>red</span>');
     });
   });
   describe('#insertBefore', function() {
     it('should insert before', function() {
+      // WARN: Hacking around a cheerio bug
+      // https://github.com/MatthewMueller/cheerio/issues/368
+      inst = $(window, '<body><div></div></body>');
       inst.$('<span>red</span>').insertBefore(inst.$('div'));
-      inst.$('body').html().should.equal('<span>red</span><div></div><span>red</span><div></div>')
+      inst.$('body').html().should.equal('<span>red</span><div></div>');
     });
     it('should insert before selector', function() {
+      // WARN: Hacking around a cheerio bug
+      // https://github.com/MatthewMueller/cheerio/issues/368
+      inst = $(window, '<body><div></div></body>');
       inst.$('<span>red</span>').insertBefore('div');
-      inst.$('body').html().should.equal('<span>red</span><div></div><span>red</span><div></div>')
+      inst.$('body').html().should.equal('<span>red</span><div></div>');
     });
   });
   describe('#prependTo', function() {
     it('should insert into', function() {
       inst.$('<span>red</span>').prependTo(inst.$('body'));
-      inst.$('body').html().should.equal('<span>red</span><div></div><div></div>')
+      inst.$('body').html().should.equal('<span>red</span><div></div><div></div>');
     });
     it('should insert into selector', function() {
       inst.$('<span>red</span>').prependTo('body');
-      inst.$('body').html().should.equal('<span>red</span><div></div><div></div>')
+      inst.$('body').html().should.equal('<span>red</span><div></div><div></div>');
     });
   });
   describe('#replaceAll', function() {
@@ -78,14 +90,14 @@ describe('cheerio-shim', function() {
       // https://github.com/MatthewMueller/cheerio/issues/368
       inst = $(window, '<body><div></div></body>');
       inst.$('<span>red</span>').replaceAll(inst.$('div'));
-      inst.$('body').html().should.equal('<span>red</span>')
+      inst.$('body').html().should.equal('<span>red</span>');
     });
     it('should replace with selector', function() {
       // WARN: Hacking around a cheerio bug
       // https://github.com/MatthewMueller/cheerio/issues/368
       inst = $(window, '<body><div></div></body>');
       inst.$('<span>red</span>').replaceAll('div');
-      inst.$('body').html().should.equal('<span>red</span>')
+      inst.$('body').html().should.equal('<span>red</span>');
     });
   });
 
