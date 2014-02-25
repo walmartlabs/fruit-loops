@@ -51,7 +51,6 @@ describe('async', function() {
       page.pending.reset();
       callback();
 
-      exec.exec.should.not.have.been.called;
       timeoutSpy.should.not.have.been.called;
       spy.should.not.have.been.called;
     });
