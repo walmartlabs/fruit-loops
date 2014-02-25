@@ -240,12 +240,17 @@ The following APIs are supported and should match the [jQuery](http://api.jquery
 #### Tree Manipulation
 
 - `.append`
+- `.appendTo`
 - `.prepend`
+- `.prependTo`
 - `.after`
+- `.insertAfter`
 - `.before`
+- `.insertBefore`
 - `.detach`
 - `.remove`
 - `.replaceWith`
+- `.replaceAll`
 - `.empty`
 - `.html`
 - `.text`
