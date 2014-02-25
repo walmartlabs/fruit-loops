@@ -77,6 +77,30 @@ describe('exec', function() {
     });
   });
 
+  describe('#processError', function() {
+    it('should remap matched lines', function() {
+      var err = new Error('Foo');
+      err.stack = 'Foo\n'
+          + ' at functionName (foo/bar:10:20)\n'
+          + ' at foo/fruit-loops/lib/bar\n'
+          + ' at foo/fruit-loops/lib/bak\n'
+          + ' at baz/bat\n';
+
+      err = exec.processError(err);
+      err.message.should.equal('Foo\n\n');
+      err.clientProcessed.should.be.true;
+      err.stack.should.equal(
+          'Foo\n\n'
+          + '  at functionName (newfoo/bar.map:20:30)\n'
+          + '  at (native)\n'
+          + '  at (baz/bat)\n');
+
+      fs.readFileSync.should
+          .have.been.calledWith('foo/bar.map')
+          .have.been.calledWith('baz/bat.map');
+    });
+  });
+
   describe('#rewriteStack', function() {
     it('should remap matched lines', function() {
       exec.rewriteStack(
