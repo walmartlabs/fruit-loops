@@ -1,12 +1,12 @@
-var exec = require('../lib/exec'),
+var Exec = require('../lib/exec'),
     fs = require('fs'),
     sourceMap = require('source-map');
 
 describe('exec', function() {
-  var debug;
+  var exec;
   beforeEach(function() {
     var self = this;
-    debug = exec.debug;
+    exec = Exec.create();
     exec.debug = false;
 
     this.stub(fs, 'readFileSync', function(name) {
@@ -29,10 +29,6 @@ describe('exec', function() {
         }
       });
     });
-  });
-  afterEach(function() {
-    exec.debug = debug;
-    require('../lib/exec/source-map').reset();
   });
 
   describe('#exec', function() {

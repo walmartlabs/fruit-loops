@@ -1,4 +1,5 @@
-var _console = require('../../lib/dom/console');
+var _console = require('../../lib/dom/console'),
+    Exec = require('../../lib/exec');
 
 describe('dom.console', function() {
   var window;
@@ -13,7 +14,7 @@ describe('dom.console', function() {
       });
 
       it('should pass all args', function() {
-        _console(window);
+        _console(window, Exec.create());
         window.console[name]('foo', 1, 'bar');
 
         console[name].should.have.been.calledOnce;

@@ -1,7 +1,7 @@
 /*global should */
 var ajax = require('../../lib/jquery/ajax'),
     hapi = require('hapi'),
-    Pending = require('../../lib/exec/pending');
+    Exec = require('../../lib/exec');
 
 describe('ajax', function() {
   var server,
@@ -70,7 +70,7 @@ describe('ajax', function() {
     ajax.reset();
 
     $ = {};
-    inst = ajax($, Pending.create());
+    inst = ajax($, Exec.create());
   });
 
   it('should extend $', function() {

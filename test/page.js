@@ -1,6 +1,5 @@
 var fruitLoops = require('../lib'),
     ajax = require('../lib/jquery/ajax'),
-    exec = require('../lib/exec'),
     fs = require('fs'),
     hapi = require('hapi'),
     sinon = require('sinon');

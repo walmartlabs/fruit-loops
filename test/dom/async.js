@@ -1,5 +1,6 @@
 var fruitLoops = require('../../lib'),
-    exec = require('../../lib/exec');
+    Exec = require('../../lib/exec'),
+    sinon = require('sinon');
 
 describe('async', function() {
   var spy,
@@ -7,7 +8,6 @@ describe('async', function() {
 
   beforeEach(function() {
     spy = this.spy();
-    this.stub(exec, 'exec', function(callback) { callback(); });
 
     page = fruitLoops.page({
       userAgent: 'anything but android',
@@ -27,22 +27,18 @@ describe('async', function() {
       page.window.nextTick(timeoutSpy);
       this.clock.tick(100);
 
-      exec.exec.should.have.been.called;
       timeoutSpy.should.have.been.calledOnce;
       spy.should.not.have.been.called;
     });
     it('should handle throws', function() {
       this.stub(process, 'nextTick', function(callback) { callback(); });
 
-      var error;
       page.window.nextTick(function() {
-        error = new Error();
-        throw error;
+        throw new Error('Expected!');
       });
       this.clock.tick(100);
 
-      exec.exec.should.have.been.called;
-      spy.should.have.been.calledWith(error);
+      spy.firstCall.args[0].should.match(/Expected!/);
     });
 
     it('should emit after all timeouts are complete', function(done) {
@@ -75,7 +71,6 @@ describe('async', function() {
       page.window.setTimeout(timeoutSpy);
       this.clock.tick(100);
 
-      exec.exec.should.have.been.called;
       timeoutSpy.should.have.been.calledOnce;
       spy.should.not.have.been.called;
     });
@@ -84,21 +79,17 @@ describe('async', function() {
       page.window.setTimeout(timeoutSpy, 10, 3, 2, 1);
       this.clock.tick(100);
 
-      exec.exec.should.have.been.called;
       timeoutSpy.should.have.been.calledOnce;
       timeoutSpy.should.have.been.calledWith(3, 2, 1);
       spy.should.not.have.been.called;
     });
     it('should handle throws', function() {
-      var error;
       page.window.setTimeout(function() {
-        error = new Error();
-        throw error;
+        throw new Error('Expected!');
       });
       this.clock.tick(100);
 
-      exec.exec.should.have.been.called;
-      spy.should.have.been.calledWith(error);
+      spy.firstCall.args[0].should.match(/Expected!/);
     });
     it('should clear on clearTimeout', function() {
       var timeoutSpy = this.spy();
@@ -106,7 +97,6 @@ describe('async', function() {
       page.window.clearTimeout(timeout);
       this.clock.tick(100);
 
-      exec.exec.should.not.have.been.called;
       timeoutSpy.should.not.have.been.called;
       spy.should.not.have.been.called;
     });
@@ -139,7 +129,6 @@ describe('async', function() {
     it('should execute via setImmediate', function(done) {
       page.window.setImmediate(function() {
         setImmediate(function() {
-          exec.exec.should.have.been.called;
           spy.should.not.have.been.called;
 
           done();
@@ -147,15 +136,12 @@ describe('async', function() {
       });
     });
     it('should handle throws', function(done) {
-      var error;
-      page.window.setImmediate(function() {
-        error = new Error();
-        throw error;
+      page.window.nextTick(function() {
+        throw new Error('Expected!');
       });
 
       setImmediate(function() {
-        exec.exec.should.have.been.called;
-        spy.should.have.been.calledWith(error);
+        spy.firstCall.args[0].should.match(/Expected!/);
         done();
       });
     });
@@ -165,7 +151,6 @@ describe('async', function() {
       page.window.clearImmediate(timeout);
 
       setImmediate(function() {
-        exec.exec.should.not.have.been.called;
         timeoutSpy.should.not.have.been.called;
         spy.should.not.have.been.called;
         done();
