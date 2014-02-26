@@ -137,6 +137,7 @@ Available options:
 - `path`: Path of the page, including any query or hash information. The should be relative to the host's root.
 - `userAgent`: Use agent value used to seed the `window.navigator.userAgent` value.
 - `cacheResources`: Truthy to cache script and page resources within the javascript heap. When this is enabled, no attempt will be made to reload content from disk after it's initially loaded/parsed.
+- `evil`: Truthy to enable dynamic code execution via `eval`, `Function`, and `setTimeout`. See [dynamic scripts](#dynamic-scripts) for more information.
 
 The returned page instance consists of:
 - `id`: Unique id value that may be used to identify the page
@@ -444,5 +445,5 @@ In addition to the `$` APIs, Fruit Loops implements a variety of DOM and global 
 
 - `nextTick(callback)`
 
-  Exposes node's `nextTick` API. This is not cancellable and `nextTick` calls made during the final cycle before an emit are not guaranteed to be cancelled or execute properly. `setImmediate` is preferred in most case.
+  Exposes node's `nextTick` API. `setImmediate` is preferred in most case as `nextTick` can lead to IO starvation.
 
