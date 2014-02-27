@@ -113,7 +113,6 @@ describe('#pool', function() {
         ids[page.window._id] = true;
       },
       navigated: function(page, existingPage) {
-        console.log(navigated, existingPage);
         existingPage.should.equal(++navigated > 2);
 
         page.window.navigated();
