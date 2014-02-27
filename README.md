@@ -117,7 +117,7 @@ Creating the sandbox and initializing the client SPA infrastructure takes a bit 
 
 ### Unnecessary Operations
 
-Things like rendering menus and other initially hidden content all add to the CPU load necessary for parsing the content. While this is a concern for the client-side rendering as well this is much more noticable when rendering on the server when all requests share the same event loop. It's recommended that any operations that won't generate meaningful content for the user on the initial load be setup so that the rendering is deferred until the point that it is needed. Generally this optimization should improve the initial load experience for both client and server environments.
+Things like rendering menus and other initially hidden content all add to the CPU load necessary for parsing the content. While this is a concern for the client-side rendering as well this is much more noticeable when rendering on the server when all requests share the same event loop. It's recommended that any operations that won't generate meaningful content for the user on the initial load be setup so that the rendering is deferred until the point that it is needed. Generally this optimization should improve the initial load experience for both client and server environments.
 
 ## Node APIs
 
