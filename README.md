@@ -85,6 +85,39 @@ In many situations this architecture allows for the burden of rendering a page t
 
 With this goal in mind Fruit Loops does not currently support features like cookie propagation to the AJAX layer or persistence of the `localStorage` and `sessionStorage` shims. PRs are accepted for this of course.
 
+## Security
+
+Like any other web server framework there are a variety of possible security concerns that might arise within a Fruit Loops environment. Where possible the framework attempts to fail safe but care needs to be taken, particularly when handling user input, to ensure application integrity.
+
+
+### Sandbox
+
+All code for a given page is executed within a sandbox which isolates page code from node code. Things such as the host's `require` and other globals are not available to the page unless explicitly exposed through host code such as `beforeExec`.
+
+Page lifecycle callbacks such as `beforeExec`, `loaded`, etc are not run in the sandbox.
+
+### Script Loader
+
+Fruit Loop's default script loader is intended to be somewhat restrictive to limit risk. To this end it will only automatically load scripts:
+
+- On the initial page load
+- Defined statically within the index's HTML file
+- Can be loaded from the file system or from inlined scripts in the HTML
+
+No attempts will be made to load scripts that are injected at later stages in the page's life cycle. Any such scripts will be executed on the client side so standard XSS protections must be employed to avoid the creation of unauthorized `script` tags.
+
+Should other scripts be loaded the `loadInContext` utility is available to client code. Even this still has the limitation of requiring that all files be loaded from the local file system.
+
+### Dynamic Scripts
+
+In an effort to reduce possible attack vectors, the ability to execute dynamic code not loaded from the file system is disabled by default. This means that `eval`, `Function()` and `setTimeout(string)` will all explicitly throw if used. Should these behaviors be needed the `evil` flag may be set on the page's options. Enabling this should be done after thorough analysis of the codebase to ensure that there are no cases where arbitrary user input may be executed in an unsafe manner.
+
+Some libraries, particularly templating libraries, will not operate properly without the evil flag. For Handlebars in particular, the recommendation is that build time precompilation be utilized as this removes the need for dynamic evaluation.
+
+### Shared State
+
+If using the VM pooling functionality then the consequences of an XSS exploit could easily have a much larger impact as attacks can be crafted that will be persistent for the lifetime of the VM.
+
 ## Supported Features
 
 Due to differences in the goals of server vs. client rendering, Fruit Loops does not support the following behaviors that might be available within a full browser environment.
@@ -117,7 +150,7 @@ Creating the sandbox and initializing the client SPA infrastructure takes a bit 
 
 ### Unnecessary Operations
 
-Things like rendering menus and other initially hidden content all add to the CPU load necessary for parsing the content. While this is a concern for the client-side rendering as well this is much more noticable when rendering on the server when all requests share the same event loop. It's recommended that any operations that won't generate meaningful content for the user on the initial load be setup so that the rendering is deferred until the point that it is needed. Generally this optimization should improve the initial load experience for both client and server environments.
+Things like rendering menus and other initially hidden content all add to the CPU load necessary for parsing the content. While this is a concern for the client-side rendering as well this is much more noticeable when rendering on the server when all requests share the same event loop. It's recommended that any operations that won't generate meaningful content for the user on the initial load be setup so that the rendering is deferred until the point that it is needed. Generally this optimization should improve the initial load experience for both client and server environments.
 
 ## Node APIs
 
@@ -370,6 +403,7 @@ Effects APIs are generally not support in fruit loops. The exception being:
 - `$.contains`
 - `$.each`
 - `$.extend`
+- `$.globalEval`
 - `$.grep`
 - `$.inArray`
 - `$.isArray`

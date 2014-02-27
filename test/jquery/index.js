@@ -7,6 +7,8 @@ describe('$', function() {
       inst;
   beforeEach(function() {
     window = {
+      eval: this.spy(),
+
       toString: function() {
         return '[object Window]';
       },
@@ -140,6 +142,12 @@ describe('$', function() {
         'foo': [3,4,3,4],
         'bat': {bat: true, baz: 'bar'}
       });
+    });
+  });
+  describe('#globalEval', function() {
+    it('should execute eval', function() {
+      inst.$.globalEval('foo');
+      window.eval.should.have.been.calledWith('foo');
     });
   });
   describe('#grep', function() {
