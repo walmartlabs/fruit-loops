@@ -491,11 +491,24 @@ describe('page', function() {
       });
     });
 
-    it('should fail on multiple', function(done) {
-      this.stub(global, 'setImmediate', function(callback) {
-        callback();
+    it('should output on multiple emits', function(done) {
+      page = fruitLoops.page({
+        userAgent: 'anything but android',
+        path: '/foo',
+        index: __dirname + '/artifacts/empty-page.html',
+        loaded: function(page) {
+          page.window.emit('events');
+          page.window.emit();
+        },
+        callback: function(err, html) {
+          should.not.exist(err);
+          html.should.equal('<!doctype html>\n<html>\n  <body>foo<script>var $serverCache = {};</script></body>\n</html>\n');
+          done();
+        }
       });
+    });
 
+    it('should fail on multiple after complete', function(done) {
       page = fruitLoops.page({
         userAgent: 'anything but android',
         path: '/foo',
@@ -504,11 +517,33 @@ describe('page', function() {
           page.window.emit();
         },
         callback: function(err, html) {
-          should.throw(function() {
-            page.emit();
-          }, Error, /Emit outside of request:.*/);
+          setImmediate(function() {
+            should.throw(function() {
+              page.emit();
+            }, Error, /Emit outside of request:.*/);
 
-          done();
+            done();
+          });
+        }
+      });
+    });
+
+    it('should fail on action after complete', function(done) {
+      page = fruitLoops.page({
+        userAgent: 'anything but android',
+        path: '/foo',
+        index: __dirname + '/artifacts/empty-page.html',
+        loaded: function(page) {
+          page.window.emit();
+        },
+        callback: function(err, html) {
+          setImmediate(function() {
+            should.throw(function() {
+              page.window.location.assign('foo');
+            }, Error, /Emit outside of request:.*/);
+
+            done();
+          });
         }
       });
     });
