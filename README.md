@@ -148,6 +148,8 @@ The two biggest performance concerns that have been seen are initialization time
 
 Creating the sandbox and initializing the client SPA infrastructure takes a bit of time and can also lead to confusion for the optimizer. Users that are rendering in a public only system and whose application support safely transitioning between pages via the `navigate` API may want to consider pooling and reusing page instances to avoid unnecessary overhead from repeated operations.
 
+In one anecdote, an application pooling was able to reduce response times by a factor of 5 due to avoiding the context overhead and recreating the base application logic on each request. The impact of this will vary by application and should be examined in context.
+
 ### Unnecessary Operations
 
 Things like rendering menus and other initially hidden content all add to the CPU load necessary for parsing the content. While this is a concern for the client-side rendering as well this is much more noticeable when rendering on the server when all requests share the same event loop. It's recommended that any operations that won't generate meaningful content for the user on the initial load be setup so that the rendering is deferred until the point that it is needed. Generally this optimization should improve the initial load experience for both client and server environments.
