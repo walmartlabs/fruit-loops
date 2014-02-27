@@ -3,10 +3,12 @@ var Exec = require('../lib/exec'),
     sourceMap = require('source-map');
 
 describe('exec', function() {
-  var exec;
+  var exec,
+      globalHandler;
   beforeEach(function() {
     var self = this;
-    exec = Exec.create();
+    globalHandler = this.spy(function(err)  { throw err; });
+    exec = Exec.create(globalHandler);
     exec.debug = false;
 
     this.stub(fs, 'readFileSync', function(name) {
@@ -32,13 +34,39 @@ describe('exec', function() {
   });
 
   describe('#exec', function() {
-    it('should include error context', function() {
+    it('should include error context', function(done) {
       try {
         exec.exec(function() {
           throw new Error();
         });
       } catch (err) {
         err.stack.should.match(/\t     1:  Line 1\n\t     2:> Line 2\n\t     3:  Line 3\n\t     4:  Line 4\n\t     5:  Line 5\n\n/);
+        globalHandler.should.have.been.calledOnce;
+        done();
+      }
+    });
+
+    it('should pass to error handler', function(done) {
+      exec.exec(function() {
+        throw new Error();
+      }, function(err) {
+        err.stack.should.match(/\t     1:  Line 1\n\t     2:> Line 2\n\t     3:  Line 3\n\t     4:  Line 4\n\t     5:  Line 5\n\n/);
+        globalHandler.should.not.have.been.called;
+        done();
+      });
+    });
+
+    it('should handle error in error handler', function(done) {
+      try {
+        exec.exec(function() {
+          throw new Error();
+        }, function(err) {
+          throw new Error('Foo');
+        });
+      } catch (err) {
+        err.should.match(/Foo/);
+        globalHandler.should.have.been.calledOnce;
+        done();
       }
     });
 
