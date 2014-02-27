@@ -24,12 +24,10 @@ describe('pending exec', function() {
       pending.pending().should.equal(0);
       popSpy.should.have.been.calledOnce;
     });
-    it('should throw on mismatch', function() {
+    it('should not throw on not found', function() {
       pending.push('test', 123, function() {});
 
-      should.throw(function() {
-        pending.pop('test', 413);
-      }, Error, 'Pending event test:413 not found.');
+      pending.pop('test', 413);
       popSpy.should.not.have.been.called;
     });
   });
@@ -43,18 +41,10 @@ describe('pending exec', function() {
       spy.callCount.should.equal(1);
       popSpy.should.have.been.calledOnce;
     });
-    it('should throw on not found', function() {
-      pending.push('test', 123, function() {});
-
-      should.throw(function() {
-        pending.cancel('test', 413);
-      }, Error, 'Pending event test:413 not found.');
-      popSpy.should.not.have.been.called;
-    });
     it('should not throw on not found', function() {
       pending.push('test', 123, function() {});
 
-      pending.cancel('test', 413, true);
+      pending.cancel('test', 413);
       popSpy.should.not.have.been.called;
     });
   });
