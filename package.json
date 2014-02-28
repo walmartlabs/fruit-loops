@@ -35,7 +35,8 @@
     "mocha": "~1.9",
     "should": "~1.2.2",
     "sinon": "~1.6.0",
-    "sinon-chai": "~2.4.0"
+    "sinon-chai": "~2.4.0",
+    "catbox": "~2.0.0"
   },
   "scripts": {
     "blanket": {
