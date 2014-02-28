@@ -1,5 +1,6 @@
 var _ = require('lodash'),
-    FruitLoops = require('../lib');
+    FruitLoops = require('../lib'),
+    fs = require('fs');
 
 describe('#pool', function() {
   var pool;
@@ -192,6 +193,43 @@ describe('#pool', function() {
     pool.navigate('/bat', function(err, html) {
       err.toString().should.match(/Errored!/);
       _done();
+    });
+  });
+  it('should reset on watch change', function(done) {
+    this.clock.restore();
+
+    var watchCallback;
+    this.stub(fs, 'watch', function(fileName, options, callback) {
+      watchCallback = callback;
+      return { close: function() {} };
+    });
+
+    var ids = {};
+
+    pool = FruitLoops.pool({
+      poolSize: 2,
+      host: 'winning',
+      index: __dirname + '/artifacts/script-page.html',
+      loaded: function(page) {
+        ids[page.window._id] = true;
+      },
+      navigated: function(page, existingPage) {
+        existingPage.should.be.false;
+
+        ids[page.window._id] = true;
+
+        page.window.emit();
+      }
+    });
+    pool.navigate('/bar', function(err, html) {
+      setImmediate(function() {
+        watchCallback();
+
+        pool.navigate('/baz', function(err, html) {
+          _.keys(ids).length.should.equal(2);
+          done();
+        });
+      });
     });
   });
   it('should error with incorrect args', function() {
