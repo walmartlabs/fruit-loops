@@ -439,11 +439,6 @@ In addition to the `$` APIs, Fruit Loops implements a variety of DOM and global 
   Outputs to the process's console.
 
 - `setTimeout`
-- `document`
-  - `body`
-  - `querySelector`
-  - `querySelectorAll`
-  - `createElement`
 
   The responses from these methods are generally `$` instances rather than true DOM objects.  Code that is expecting true DOM objects will need to be updated to account for this or otherwise utilize the `$` APIs.
 

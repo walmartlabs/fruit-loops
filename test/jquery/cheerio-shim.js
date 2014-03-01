@@ -20,18 +20,6 @@ describe('cheerio-shim', function() {
     inst = $(window, '<body><div></div><div></div></body>');
   });
 
-  describe('innerHTML', function() {
-    it('should retreive html', function() {
-      var $el = inst.$('body');
-      $el.innerHTML.should.equal('<div></div><div></div>');
-    });
-    it('should set html', function() {
-      var $el = inst.$('body');
-      $el.innerHTML = '<div>winning</div>';
-      $el.html().should.equal('<div>winning</div>');
-    });
-  });
-
   describe('#appendTo', function() {
     it('should insert into', function() {
       inst.$('<span>red</span>').appendTo(inst.$('body'));
