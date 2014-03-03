@@ -25,6 +25,8 @@
     "source-map": "~0.1.8"
   },
   "devDependencies": {
+    "catbox": "~2.0.0",
+    "catbox-memory": "~1.0.1",
     "chai": "~1.9.0",
     "grunt": "~0.4.1",
     "grunt-cli": "~0.1.8",
@@ -34,8 +36,7 @@
     "mocha": "~1.9",
     "should": "~1.2.2",
     "sinon": "~1.6.0",
-    "sinon-chai": "~2.4.0",
-    "catbox": "~2.0.0"
+    "sinon-chai": "~2.4.0"
   },
   "scripts": {
     "blanket": {
