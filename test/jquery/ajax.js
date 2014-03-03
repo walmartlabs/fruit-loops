@@ -2,7 +2,8 @@
 var ajax = require('../../lib/jquery/ajax'),
     hapi = require('hapi'),
     Catbox = require('catbox'),
-    Exec = require('../../lib/exec');
+    Exec = require('../../lib/exec'),
+    sinon = require('sinon');
 
 describe('ajax', function() {
   var server,
@@ -11,7 +12,7 @@ describe('ajax', function() {
       policy,
       getSpy;
   before(function(done) {
-    getSpy = this.spy(function(req, reply) {
+    getSpy = sinon.spy(function(req, reply) {
       reply({data: 'get!'});
     });
 
@@ -23,7 +24,7 @@ describe('ajax', function() {
         config: {
           jsonp: 'callback',
           cache: {
-            expiresIn: 365*24*60*60*1000
+            expiresIn: 5*24*60*60*1000
           }
         },
         handler: getSpy
@@ -76,7 +77,7 @@ describe('ajax', function() {
           expiresIn: 5000
       };
 
-      var client = new Catbox.Client('memory');
+      var client = new Catbox.Client('catbox-memory');
       client.start(function () {
           policy = new Catbox.Policy(policyOptions, client, 'example');
           done();
