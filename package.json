@@ -20,12 +20,13 @@
     "contextify": "~0.1.6",
     "lodash": "~2.4.1",
     "nipple": "~2.2.0",
-    "node-v8-clone": "~0.4.5",
     "printf": "~0.1.1",
     "request": "~2.14.0",
     "source-map": "~0.1.8"
   },
   "devDependencies": {
+    "catbox": "~2.0.0",
+    "catbox-memory": "~1.0.1",
     "chai": "~1.9.0",
     "grunt": "~0.4.1",
     "grunt-cli": "~0.1.8",

@@ -27,8 +27,6 @@ describe('page', function() {
   afterEach(function() {
     page.dispose();
     page = undefined;
-
-    ajax.reset();
   });
 
   it('should load html source', function(done) {
