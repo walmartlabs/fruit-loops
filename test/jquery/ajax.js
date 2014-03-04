@@ -271,7 +271,7 @@ describe('ajax', function() {
           errorCalled = true;
         },
         complete: function(xhr, status) {
-          //should.exist(errorCalled);
+          should.exist(errorCalled);
 
           status.should.equal('parsererror');
 
