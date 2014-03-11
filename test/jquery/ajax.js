@@ -77,7 +77,7 @@ describe('ajax', function() {
           expiresIn: 5000
       };
 
-      var client = new Catbox.Client('catbox-memory');
+      var client = new Catbox.Client('memory');
       client.start(function () {
           policy = new Catbox.Policy(policyOptions, client, 'example');
           done();

@@ -25,8 +25,7 @@
     "source-map": "~0.1.8"
   },
   "devDependencies": {
-    "catbox": "2.x.x",
-    "catbox-memory": "1.x.x",
+    "catbox": "1.x.x",
     "chai": "~1.9.0",
     "grunt": "~0.4.1",
     "grunt-cli": "~0.1.8",
