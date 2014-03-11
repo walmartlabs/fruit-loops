@@ -2,7 +2,15 @@
 
 ## Development
 
-[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.2.1...master)
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.2.2...master)
+
+## v0.2.2 - March 11th, 2014
+- Use catbox 1.x.x and hope we are dealing with that - 122d7fc
+- Relax catbox version requirements - 828be40
+- Fix spelling of detach method name - 63a6a61
+- Wrap beforeExec callback in a pending block - e228e2a
+
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.2.1...v0.2.2)
 
 ## v0.2.1 - March 4th, 2014
 - Use https protocol for cheerio dependency - 0901a8f
