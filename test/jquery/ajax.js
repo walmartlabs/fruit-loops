@@ -7,6 +7,7 @@ var ajax = require('../../lib/jquery/ajax'),
 
 describe('ajax', function() {
   var server,
+      window,
       $,
       inst,
       policy,
@@ -20,6 +21,17 @@ describe('ajax', function() {
     server.route([
       {
         path: '/',
+        method: 'GET',
+        config: {
+          jsonp: 'callback',
+          cache: {
+            expiresIn: 5*24*60*60*1000
+          }
+        },
+        handler: getSpy
+      },
+      {
+        path: '/foo/bar',
         method: 'GET',
         config: {
           jsonp: 'callback',
@@ -91,16 +103,20 @@ describe('ajax', function() {
     getSpy.reset();
 
     $ = {};
-    inst = ajax($, Exec.create(function(err) { throw err; }));
+    window = {
+      location: 'http://localhost:' + server.info.port + '/foo/index.html',
+      $: $
+    };
+    inst = ajax(window, Exec.create(function(err) { throw err; }));
   });
   afterEach(function() {
     inst.reset();
   });
 
   it('should extend $', function() {
-    var $ = {};
-    ajax($);
-    should.exist($.ajax);
+    var window = {$: {}};
+    ajax(window);
+    should.exist(window.$.ajax);
   });
 
   describe('#ajax', function() {
@@ -194,7 +210,7 @@ describe('ajax', function() {
     });
     it('should short circuit cached requests', function(done) {
       var cache = {};
-      inst = ajax($, Exec.create(function(err) { throw err; }), policy);
+      inst = ajax(window, Exec.create(function(err) { throw err; }), policy);
 
       $.ajax({
         url: 'http://localhost:' + server.info.port + '/',
@@ -223,6 +239,90 @@ describe('ajax', function() {
           });
         }
       });
+    });
+    it('should handle proto relative requests', function(done) {
+      var successCalled;
+      var xhrReturn = $.ajax({
+        url: '//localhost:' + server.info.port + '/',
+        success: function(data, status, xhr) {
+          data.should.eql({data: 'get!'});
+
+          status.should.equal('success');
+
+          xhr.should.equal(xhrReturn);
+          xhr.readyState.should.equal(4);
+          successCalled = true;
+        },
+        complete: function(xhr, status) {
+          should.exist(successCalled);
+
+          status.should.equal('success');
+
+          xhr.should.equal(xhrReturn);
+          xhr.readyState.should.equal(4);
+
+          inst.on('complete', function() {
+            done();
+          });
+        }
+      });
+      xhrReturn.readyState.should.equal(2);
+    });
+    it('should handle server relative requests', function(done) {
+      var successCalled;
+      var xhrReturn = $.ajax({
+        url: '/',
+        success: function(data, status, xhr) {
+          data.should.eql({data: 'get!'});
+
+          status.should.equal('success');
+
+          xhr.should.equal(xhrReturn);
+          xhr.readyState.should.equal(4);
+          successCalled = true;
+        },
+        complete: function(xhr, status) {
+          should.exist(successCalled);
+
+          status.should.equal('success');
+
+          xhr.should.equal(xhrReturn);
+          xhr.readyState.should.equal(4);
+
+          inst.on('complete', function() {
+            done();
+          });
+        }
+      });
+      xhrReturn.readyState.should.equal(2);
+    });
+    it('should handle path relative requests', function(done) {
+      var successCalled;
+      var xhrReturn = $.ajax({
+        url: 'bar',
+        success: function(data, status, xhr) {
+          data.should.eql({data: 'get!'});
+
+          status.should.equal('success');
+
+          xhr.should.equal(xhrReturn);
+          xhr.readyState.should.equal(4);
+          successCalled = true;
+        },
+        complete: function(xhr, status) {
+          should.exist(successCalled);
+
+          status.should.equal('success');
+
+          xhr.should.equal(xhrReturn);
+          xhr.readyState.should.equal(4);
+
+          inst.on('complete', function() {
+            done();
+          });
+        }
+      });
+      xhrReturn.readyState.should.equal(2);
     });
 
     it('should handle http errors', function(done) {
@@ -520,7 +620,7 @@ describe('ajax', function() {
 
     it('should pull ttl from cached elements', function(done) {
       var cache = {};
-      inst = ajax($, Exec.create(function(err) { throw err; }), policy);
+      inst = ajax(window, Exec.create(function(err) { throw err; }), policy);
 
       $.ajax({
         url: 'http://localhost:' + server.info.port + '/ttl/5',
