@@ -2,7 +2,17 @@
 
 ## Development
 
-[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.2.2...master)
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.3.0...master)
+
+## v0.3.0 - March 17th, 2014
+- [#32](https://github.com/walmartlabs/fruit-loops/pull/32) - Add sequence ID to emit calls to prevent race ([@kpdecker](https://api.github.com/users/kpdecker))
+- [#31](https://github.com/walmartlabs/fruit-loops/pull/31) - Handle non-fully qualified ajax calls ([@kpdecker](https://api.github.com/users/kpdecker))
+- Update for Catbox 2.1+ APIs - bd38d13
+
+Compatibility notes:
+- AJAX Cache users need to pass in a Catbox 2.1 object or use an adapter on 1.0 object.
+
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.2.2...v0.3.0)
 
 ## v0.2.2 - March 11th, 2014
 - Use catbox 1.x.x and hope we are dealing with that - 122d7fc
