@@ -240,7 +240,35 @@ describe('ajax', function() {
         }
       });
     });
-    it('should handle absolute requests', function(done) {
+    it('should handle proto relative requests', function(done) {
+      var successCalled;
+      var xhrReturn = $.ajax({
+        url: '//localhost:' + server.info.port + '/',
+        success: function(data, status, xhr) {
+          data.should.eql({data: 'get!'});
+
+          status.should.equal('success');
+
+          xhr.should.equal(xhrReturn);
+          xhr.readyState.should.equal(4);
+          successCalled = true;
+        },
+        complete: function(xhr, status) {
+          should.exist(successCalled);
+
+          status.should.equal('success');
+
+          xhr.should.equal(xhrReturn);
+          xhr.readyState.should.equal(4);
+
+          inst.on('complete', function() {
+            done();
+          });
+        }
+      });
+      xhrReturn.readyState.should.equal(2);
+    });
+    it('should handle server relative requests', function(done) {
       var successCalled;
       var xhrReturn = $.ajax({
         url: '/',
@@ -268,7 +296,7 @@ describe('ajax', function() {
       });
       xhrReturn.readyState.should.equal(2);
     });
-    it('should handle relative requests', function(done) {
+    it('should handle path relative requests', function(done) {
       var successCalled;
       var xhrReturn = $.ajax({
         url: 'bar',
