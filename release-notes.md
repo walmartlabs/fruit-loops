@@ -2,7 +2,12 @@
 
 ## Development
 
-[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.3.0...master)
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.4.0...master)
+
+## v0.4.0 - March 18th, 2014
+- Include response metadata in page callback - 3a112d2
+
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.3.0...v0.4.0)
 
 ## v0.3.0 - March 17th, 2014
 - [#32](https://github.com/walmartlabs/fruit-loops/pull/32) - Add sequence ID to emit calls to prevent race ([@kpdecker](https://api.github.com/users/kpdecker))
