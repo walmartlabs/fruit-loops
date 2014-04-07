@@ -10,6 +10,8 @@ describe('#pool', function() {
   });
 
   it('should serve pages on navigate', function(done) {
+    var emitCalled;
+
     pool = FruitLoops.pool({
       poolSize: 2,
       host: 'winning',
@@ -27,12 +29,16 @@ describe('#pool', function() {
       },
       callback: function() {
         throw new Error('should not be called');
+      },
+      cleanup: function() {
+        emitCalled.should.be.true;
+        done();
       }
     });
     pool.navigate('/bar', function(err, html) {
+      emitCalled = true;
       should.not.exist(err);
       html.should.match(/"location-info">http:\/\/winning\/bar true<\/div>/);
-      done();
     });
   });
   it('should create up to poolSize VMs', function(done) {
