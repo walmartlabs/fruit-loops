@@ -2,7 +2,14 @@
 
 ## Development
 
-[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.4.0...master)
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.5.0...master)
+
+## v0.5.0 - April 6th, 2014
+- Add cleanup callback for pool API - 2ce9c77
+- Remove console log on emit - a318950
+- Ensure ajax cache url does not change - 4cf33b0
+
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.4.0...v0.5.0)
 
 ## v0.4.0 - March 18th, 2014
 - Include response metadata in page callback - 3a112d2
