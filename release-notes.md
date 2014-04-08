@@ -2,7 +2,13 @@
 
 ## Development
 
-[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.5.0...master)
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.5.1...master)
+
+## v0.5.1 - April 8th, 2014
+- Remove $.get override - a2c837b
+- Fix buffer handling under new Cheerio - f50353f
+
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.5.0...v0.5.1)
 
 ## v0.5.0 - April 6th, 2014
 - Add cleanup callback for pool API - 2ce9c77
