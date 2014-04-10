@@ -2,7 +2,12 @@
 
 ## Development
 
-[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.5.1...master)
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.5.2...master)
+
+## v0.5.2 - April 10th, 2014
+- Add missing redirect callback to history module - edb476f
+
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.5.1...v0.5.2)
 
 ## v0.5.1 - April 8th, 2014
 - Remove $.get override - a2c837b
