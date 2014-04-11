@@ -2,7 +2,13 @@
 
 ## Development
 
-[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.5.3...master)
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.5.4...master)
+
+## v0.5.4 - April 11th, 2014
+- Perform explicit cleanup to avoid GC strain/bugs - cb2bfc0
+- Provide better names for module functions - 1545a79
+
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.5.3...v0.5.4)
 
 ## v0.5.3 - April 10th, 2014
 - Fix memory leak in defining window.location - 3f7da77
