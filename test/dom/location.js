@@ -9,6 +9,7 @@ describe('dom.location', function() {
   });
 
   it('should generate location', function() {
+    location.preInit(window);
     location(window, 'http://foo.bar/foo/bar?baz=bat&boz=');
     window.location.host.should.equal('foo.bar');
     window.location.path.should.equal('/foo/bar');
@@ -17,6 +18,7 @@ describe('dom.location', function() {
     (window.location+'').should.equal('http://foo.bar/foo/bar?baz=bat&boz=');
   });
   it('should handle ports', function() {
+    location.preInit(window);
     location(window, 'https://foo.bar:8080/foo/bar?baz=bat&boz=');
     window.location.host.should.equal('foo.bar:8080');
     window.location.origin.should.equal('https://foo.bar:8080');
@@ -25,6 +27,7 @@ describe('dom.location', function() {
   it('should redirect on assign()', function() {
     var spy = this.spy();
 
+    location.preInit(window);
     location(window, 'https://foo.bar:8080/foo/bar?baz=bat&boz=', spy);
     window.location.assign('/foo');
 
@@ -34,6 +37,7 @@ describe('dom.location', function() {
   it('should redirect on window field assign', function() {
     var spy = this.spy();
 
+    location.preInit(window);
     location(window, 'https://foo.bar:8080/foo/bar?baz=bat&boz=', spy);
     window.location = '/foo';
 
@@ -42,6 +46,7 @@ describe('dom.location', function() {
   it('should redirect on document field assign', function() {
     var spy = this.spy();
 
+    location.preInit(window);
     location(window, 'https://foo.bar:8080/foo/bar?baz=bat&boz=', spy);
     window.location = '/foo';
 
