@@ -2,7 +2,12 @@
 
 ## Development
 
-[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.5.2...master)
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.5.3...master)
+
+## v0.5.3 - April 10th, 2014
+- Fix memory leak in defining window.location - 3f7da77
+
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.5.2...v0.5.3)
 
 ## v0.5.2 - April 10th, 2014
 - Add missing redirect callback to history module - edb476f
