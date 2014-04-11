@@ -2,7 +2,17 @@
 
 ## Development
 
-[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.5.4...master)
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.5.5...master)
+
+## v0.5.5 - April 11th, 2014
+- Stop page execution on redirect - 961c226
+- Fix global location assignment - 092f96e
+- Add comment to magic constant - 635d874
+
+Compatibility notes:
+- Any redirect operations will now throw a known error to prevent further execution of the thread. Clients may need to account for this in cleanup operations.
+
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.5.4...v0.5.5)
 
 ## v0.5.4 - April 11th, 2014
 - Perform explicit cleanup to avoid GC strain/bugs - cb2bfc0
