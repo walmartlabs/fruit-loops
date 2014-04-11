@@ -134,6 +134,24 @@ describe('page', function() {
     });
   });
 
+  it('should prevent exec on redirect in external script', function(done) {
+    this.clock.restore();
+
+    page = fruitLoops.page({
+      userAgent: 'anything but android',
+      index: __dirname + '/artifacts/script-page.html',
+      resolver: function() {
+        return __dirname + '/artifacts/redirect-script.js';
+      },
+      callback: function(err, data) {
+        should.not.exist(err);
+        data.should.eql({redirect: '/foo'});
+
+        setTimeout(done, 100);
+      }
+    });
+  });
+
   it('should prevent exec on error in external script', function(done) {
     this.clock.restore();
 
