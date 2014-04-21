@@ -2,7 +2,13 @@
 
 ## Development
 
-[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.5.5...master)
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.6.0...master)
+
+## v0.6.0 - April 21st, 2014
+- Expose pool metadata via pool.info api - a7da70e
+- Include usage data in page metadata - fc07c13
+
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.5.5...v0.6.0)
 
 ## v0.5.5 - April 11th, 2014
 - Stop page execution on redirect - 961c226
