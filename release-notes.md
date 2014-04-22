@@ -2,7 +2,12 @@
 
 ## Development
 
-[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.6.0...master)
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.6.1...master)
+
+## v0.6.1 - April 22nd, 2014
+- Use empty string for empty location.search - e3e74d1
+
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.6.0...v0.6.1)
 
 ## v0.6.0 - April 21st, 2014
 - Expose pool metadata via pool.info api - a7da70e
