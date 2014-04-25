@@ -2,7 +2,15 @@
 
 ## Development
 
-[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.6.1...master)
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.6.2...master)
+
+## v0.6.2 - April 25th, 2014
+- Add a few more cleanup cases in page dispose - d4ffe29, f107376
+- Safely handle syntax errors in scripts - 1ff7f12
+- Add isBoom flag for tracking of Errors - 9df9252
+- Simplify if conditional - bd3cdda
+
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.6.1...v0.6.2)
 
 ## v0.6.1 - April 22nd, 2014
 - Use empty string for empty location.search - e3e74d1
