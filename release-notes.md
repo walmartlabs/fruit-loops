@@ -2,7 +2,12 @@
 
 ## Development
 
-[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.6.2...master)
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.6.3...master)
+
+## v0.6.3 - May 5th, 2014
+- Use setImmediate to isolate client and loader code - 5a693c8
+
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.6.2...v0.6.3)
 
 ## v0.6.2 - April 25th, 2014
 - Add a few more cleanup cases in page dispose - d4ffe29, f107376
