@@ -222,7 +222,7 @@ describe('page', function() {
           finalize.should.have.been.calledWith(page);
 
           should.not.exist(err);
-          html.should.equal('<!doctype html>\n<html>\n  <body>foo\n<script>var $serverCache = {};</script></body>\n</html>\n');
+          html.should.equal('<!doctype html>\n<html>\n  <body>foo<script>var $serverCache = {};</script></body>\n</html>\n');
           done();
         }
       });
@@ -251,7 +251,7 @@ describe('page', function() {
           html.should.equal('<!doctype html>\n'
               + '<html>\n'
               + '  <body>\n    \n    \n    \n'
-              + '  \n<script>var $serverCache = {};</script>'
+              + '  <script>var $serverCache = {};</script>'
               + '<script>var inlinedVar = 1;</script>'
               + '<script src="/test-script.js"></script>'
               + '<script>var syncVar = externalVar + 1;</script>'
@@ -293,7 +293,7 @@ describe('page', function() {
             finalize.should.have.been.calledWith(page);
 
             should.not.exist(err);
-            html.should.equal('<!doctype html>\n<html>\n  <body>foo\n<script>var $serverCache = {};</script></body>\n</html>\n');
+            html.should.equal('<!doctype html>\n<html>\n  <body>foo<script>var $serverCache = {};</script></body>\n</html>\n');
             done();
           }
         });
@@ -316,7 +316,7 @@ describe('page', function() {
             callback = true;
 
             should.not.exist(err);
-            html.should.equal('<!doctype html>\n<html>\n  <body>foo\n<script>var $serverCache = {};</script></body>\n</html>\n');
+            html.should.equal('<!doctype html>\n<html>\n  <body>foo<script>var $serverCache = {};</script></body>\n</html>\n');
             done();
           }
         });
@@ -358,7 +358,7 @@ describe('page', function() {
             ajaxSpy.should.have.been.calledOnce;
 
             should.not.exist(err);
-            html.should.equal('<!doctype html>\n<html>\n  <body>foo\n<script>var $serverCache = {"http://localhost:' + server.info.port + '/": {"data":"get!"}};</script></body>\n</html>\n');
+            html.should.equal('<!doctype html>\n<html>\n  <body>foo<script>var $serverCache = {"http://localhost:' + server.info.port + '/": {"data":"get!"}};</script></body>\n</html>\n');
             done();
           }
         });
@@ -380,7 +380,7 @@ describe('page', function() {
             callback = true;
 
             should.not.exist(err);
-            html.should.equal('<!doctype html>\n<html>\n  <body>foo\n<script>var $serverCache = {};</script></body>\n</html>\n');
+            html.should.equal('<!doctype html>\n<html>\n  <body>foo<script>var $serverCache = {};</script></body>\n</html>\n');
             done();
           }
         });
@@ -518,7 +518,7 @@ describe('page', function() {
         },
         callback: function(err, html) {
           should.not.exist(err);
-          html.should.equal('<!doctype html>\n<html>\n  <body>foo\n<script>var $serverCache = {};</script></body>\n</html>\n');
+          html.should.equal('<!doctype html>\n<html>\n  <body>foo<script>var $serverCache = {};</script></body>\n</html>\n');
           done();
         }
       });
@@ -579,13 +579,13 @@ describe('page', function() {
         },
         callback: function(err, html) {
           should.not.exist(err);
-          html.should.equal('<!doctype html>\n<html>\n  <body>foo\n<script>var $serverCache = {};</script></body>\n</html>\n');
+          html.should.equal('<!doctype html>\n<html>\n  <body>foo<script>var $serverCache = {};</script></body>\n</html>\n');
 
           page.navigate('/bar', function(err, html) {
             finalize.should.have.been.calledTwice;
 
             should.not.exist(err);
-            html.should.equal('<!doctype html>\n<html>\n  <body>foo\n\n<script>var $serverCache = {};</script></body>\n</html>\n');
+            html.should.equal('<!doctype html>\n<html>\n  <body>foo<script>var $serverCache = {};</script></body>\n</html>\n');
 
             done();
           });
