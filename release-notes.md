@@ -2,7 +2,15 @@
 
 ## Development
 
-[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.6.3...master)
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.6.4...master)
+
+## v0.6.4 - May 12th, 2014
+- Do not run cleanup for errored views - 7f2f752
+- Improve error logging for inline scripts - 989c456
+- Remove newline from script output - b0fcbf5
+- Refactor pages and windows into named classes - 4dcd789
+
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.6.3...v0.6.4)
 
 ## v0.6.3 - May 5th, 2014
 - Use setImmediate to isolate client and loader code - 5a693c8
