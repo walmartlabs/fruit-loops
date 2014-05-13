@@ -183,6 +183,20 @@ describe('page', function() {
       }
     });
   });
+  it('should prevent exec on error in internal script', function(done) {
+    this.clock.restore();
+
+    page = fruitLoops.page({
+      userAgent: 'anything but android',
+      index: __dirname + '/artifacts/inline-script-syntax-error.html',
+      callback: function(err) {
+        err.should.be.instanceOf(SyntaxError);
+        err.stack.should.match(/SyntaxError: Unexpected token \]\n\nInline Script:\n\t<script>[\s\S]*\{\]/m);
+
+        setTimeout(done, 100);
+      }
+    });
+  });
   it('should prevent exec on error in onEmit callback', function(done) {
     this.clock.restore();
 
