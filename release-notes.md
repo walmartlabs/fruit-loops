@@ -2,7 +2,13 @@
 
 ## Development
 
-[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.6.4...master)
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.6.5...master)
+
+## v0.6.5 - May 19th, 2014
+- NOP race condition with errors in loader - 49332b4
+- Catch throws from file resolvers and pass along - e295fb1
+
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.6.4...v0.6.5)
 
 ## v0.6.4 - May 12th, 2014
 - Do not run cleanup for errored views - 7f2f752
