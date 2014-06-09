@@ -2,7 +2,15 @@
 
 ## Development
 
-[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.6.5...master)
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.7.0...master)
+
+## v0.7.0 - June 9th, 2014
+- Allow graceful error handling in beforeExec - f73a8c6
+- Handle $(function(){}) calls - c07a656
+- Provide user agent for ajax calls - 4039e9f
+- Handle additional dispose + loader race conditon - bdff9c7
+
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.6.5...v0.7.0)
 
 ## v0.6.5 - May 19th, 2014
 - NOP race condition with errors in loader - 49332b4
