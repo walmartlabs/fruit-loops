@@ -22,6 +22,12 @@ describe('$', function() {
     inst = $(window, '');
   });
 
+  describe('function object', function() {
+    it('should work on function', function(done) {
+      inst.$(done);
+    });
+  });
+
   describe('document object', function() {
     it('should accept document object', function() {
       inst.$(window.document).should.be.instanceOf(Cheerio);
