@@ -78,6 +78,25 @@ describe('page', function() {
       }
     });
   });
+  it('should handle before script error', function(done) {
+    var execCalled;
+    page = fruitLoops.page({
+      userAgent: 'anything but android',
+      url: {
+        path: '/foo'
+      },
+      index: __dirname + '/artifacts/script-page.html',
+      beforeExec: function(page, next) {
+        execCalled = true;
+        next(new Error('failed'));
+      },
+      callback: function(err) {
+        err.should.be.instanceOf(Error);
+        err.message.should.equal('failed');
+        done();
+      }
+    });
+  });
   it('should load all inlined scripts', function(done) {
     page = fruitLoops.page({
       userAgent: 'anything but android',
