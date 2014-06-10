@@ -2,7 +2,12 @@
 
 ## Development
 
-[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.7.0...master)
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.7.1...master)
+
+## v0.7.1 - June 9th, 2014
+- Use setImmediate for beforeExec - f207080
+
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.7.0...v0.7.1)
 
 ## v0.7.0 - June 9th, 2014
 - Allow graceful error handling in beforeExec - f73a8c6
