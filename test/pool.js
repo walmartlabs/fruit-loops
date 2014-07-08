@@ -131,21 +131,26 @@ describe('#pool', function() {
         throw new Error('should not be called');
       }
     });
-    pool.navigate('/bar', function(err, html) {
+    pool.navigate('/bar', function(err, html, meta) {
       should.not.exist(err);
       html.should.match(/"location-info">http:\/\/winning\/bar true<\/div>/);
+      meta.status.should.equal(404);
 
       _done();
     });
-    pool.navigate('/baz', function(err, html) {
+    pool.navigate('/baz', function(err, html, meta) {
       should.not.exist(err);
       html.should.match(/"location-info">http:\/\/winning\/baz true<\/div>/);
+      meta.status.should.equal(200);
 
       _done();
     });
-    pool.navigate('/bat', function(err, html) {
+    pool.navigate('/bat', function(err, html, meta) {
       should.not.exist(err);
       html.should.match(/"location-info">http:\/\/winning\/bat true<\/div>/);
+      meta.status.should.equal(200);
+
+      pool.info().should.eql({queued: 0, pages: 2, free: 1});
 
       _done();
     });

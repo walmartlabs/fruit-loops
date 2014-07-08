@@ -5,6 +5,9 @@
     <script>
       function navigated() {
         $('.location-info').text(location.toString() + ' ' + loadedCallback);
+        if (/.*\/bar.*/.test(location)) {
+          FruitLoops.statusCode(404);
+        }
       }
     </script>
   </body>
