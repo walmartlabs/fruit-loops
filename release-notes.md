@@ -2,7 +2,13 @@
 
 ## Development
 
-[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.7.1...master)
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.8.0...master)
+
+## v0.8.0 - July 8th, 2014
+- [#35](https://github.com/walmartlabs/fruit-loops/issues/35) - Allow for custom status codes on response ([@kpdecker](https://api.github.com/users/kpdecker))
+- Fix pending cleanup on script load error - 07e7557
+
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.7.1...v0.8.0)
 
 ## v0.7.1 - June 9th, 2014
 - Use setImmediate for beforeExec - f207080
