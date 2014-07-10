@@ -27,6 +27,7 @@
   "shadow": true,
   "nonstandard": true,
   "onevar": false,
+  "-W070": true,
 
   "predef": [
     "setImmediate",
