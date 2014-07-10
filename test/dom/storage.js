@@ -10,7 +10,7 @@ describe('storage', function() {
     should.exist(window.sessionStorage);
   });
 
-  it('should save date', function() {
+  it('should save data', function() {
     var window = {};
     storage(window, 'localStorage');
 
@@ -19,6 +19,7 @@ describe('storage', function() {
 
     window.localStorage.setItem('foo', 'bar');
     window.localStorage.getItem('foo').should.equal('bar');
+    window.localStorage.key(0).should.equal('foo');
     window.localStorage.length.should.equal(1);
 
     window.localStorage.removeItem('foo');
