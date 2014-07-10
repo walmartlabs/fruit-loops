@@ -105,6 +105,23 @@ describe('exec', function() {
     });
   });
 
+  describe('#RedirectError', function() {
+    it('should include messages', function() {
+      var redirect = new exec.RedirectError('foo');
+      redirect.message.should.equal('Redirect foo');
+      redirect.toString().should.equal('RedirectError: Redirect foo');
+    });
+    it('should include flags', function() {
+      var redirect = new exec.RedirectError('foo');
+      redirect._redirect.should.equal(true);
+      redirect.url.should.equal('foo');
+    });
+    it('should include stack information', function() {
+      var redirect = new exec.RedirectError('foo');
+      redirect.stack.should.match(/\/test\/exec.js/);
+    });
+  });
+
   describe('#processError', function() {
     it('should remap matched lines', function() {
       var err = new Error('Foo');
