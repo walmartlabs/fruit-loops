@@ -2,7 +2,13 @@
 
 ## Development
 
-[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.9.0...master)
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.9.1...master)
+
+## v0.9.1 - July 10th, 2014
+- Use _redirect flag rather than instanceOf - a27207e
+- Make RedirectError a consumable error - 461e201
+
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.9.0...v0.9.1)
 
 ## v0.9.0 - July 10th, 2014
 - Invalidate caching ajax requests on reset - c9fb8d8
