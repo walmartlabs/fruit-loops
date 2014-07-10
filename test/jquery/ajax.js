@@ -209,7 +209,6 @@ describe('ajax', function() {
       });
     });
     it('should short circuit cached requests', function(done) {
-      var cache = {};
       inst = ajax(window, Exec.create(function(err) { throw err; }), policy);
 
       $.ajax({
@@ -239,6 +238,18 @@ describe('ajax', function() {
           });
         }
       });
+    });
+    it('should NOP pending cache responses on reset', function(done) {
+      inst = ajax(window, Exec.create(function(err) { throw err; }), policy);
+
+      $.ajax({
+        url: 'http://localhost:' + server.info.port + '/',
+        complete: function(xhr, status) {
+          throw new Error('failure');
+        }
+      });
+      inst.reset();
+      process.nextTick(done, 100);
     });
     it('should handle proto relative requests', function(done) {
       var successCalled;
