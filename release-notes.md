@@ -2,7 +2,19 @@
 
 ## Development
 
-[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.8.0...master)
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.9.0...master)
+
+## v0.9.0 - July 10th, 2014
+- Invalidate caching ajax requests on reset - c9fb8d8
+- Remove legacy catbox failover code - 2e45f9a
+- Add Storage.key implementation - bacabbe
+- Explicitly break cross context DOM links - 4dca494
+- Add dispose logic for jQuery objects - d4e4fcf
+
+Compatibility notes:
+- Catbox prior to 2.0 is no longer supported
+
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.8.0...v0.9.0)
 
 ## v0.8.0 - July 8th, 2014
 - [#35](https://github.com/walmartlabs/fruit-loops/issues/35) - Allow for custom status codes on response ([@kpdecker](https://api.github.com/users/kpdecker))
