@@ -208,6 +208,34 @@ describe('ajax', function() {
         }
       });
     });
+    it('should handle errored connections', function(done) {
+      var errorCalled;
+      var xhrReturn = $.ajax({
+        url: 'http://localhost:' + (server.info.port+1) + '/',
+        error: function(xhr, status, error) {
+          error.should.be.instanceOf(Error);
+
+          status.should.equal('error');
+
+          xhr.should.equal(xhrReturn);
+          xhr.readyState.should.equal(4);
+          errorCalled = true;
+        },
+        complete: function(xhr, status) {
+          should.exist(errorCalled);
+
+          status.should.equal('error');
+
+          xhr.should.equal(xhrReturn);
+          xhr.readyState.should.equal(4);
+
+          inst.on('complete', function() {
+            done();
+          });
+        }
+      });
+      xhrReturn.readyState.should.equal(2);
+    });
     it('should short circuit cached requests', function(done) {
       inst = ajax(window, Exec.create(function(err) { throw err; }), policy);
 
