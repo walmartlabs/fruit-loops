@@ -19,6 +19,13 @@ describe('page', function() {
         }, 10);
       }
     });
+    server.route({
+      path: '/script',
+      method: 'GET',
+      handler: function(req, reply) {
+        reply({data: '<script>test</script><!-- foo -->'});
+      }
+    });
     server.start(done);
   });
   after(function(done) {
@@ -291,6 +298,31 @@ describe('page', function() {
               + '</body>\n</html>\n');
           done();
         }
+      });
+    });
+
+    describe('serverCache', function() {
+      it('should output serverCache with escaped content', function(done) {
+        this.clock.restore();
+
+        page = fruitLoops.page({
+          userAgent: 'anything but android',
+          url: {
+            path: '/foo'
+          },
+          index: __dirname + '/artifacts/empty-page.html',
+          loaded: function(page) {
+            page.window.$.ajax({
+              url: 'http://localhost:' + server.info.port + '/script'
+            });
+            page.window.emit('events');
+          },
+          callback: function(err, html) {
+            should.not.exist(err);
+            html.should.equal('<!doctype html>\n<html>\n  <body>foo<script>var $serverCache = {"http://localhost:' + server.info.port + '/script": {"data":"<script>test<\\/script><\\!-- foo -->"}};</script></body>\n</html>\n');
+            done();
+          }
+        });
       });
     });
 
