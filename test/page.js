@@ -23,7 +23,7 @@ describe('page', function() {
       path: '/script',
       method: 'GET',
       handler: function(req, reply) {
-        reply({data: '<script>test</script><!-- foo -->'});
+        reply({data: '<script>test</script><!-- foo --><script>test</script>'});
       }
     });
     server.start(done);
@@ -319,7 +319,7 @@ describe('page', function() {
           },
           callback: function(err, html) {
             should.not.exist(err);
-            html.should.equal('<!doctype html>\n<html>\n  <body>foo<script>var $serverCache = {"http://localhost:' + server.info.port + '/script": {"data":"<script>test<\\/script><\\!-- foo -->"}};</script></body>\n</html>\n');
+            html.should.equal('<!doctype html>\n<html>\n  <body>foo<script>var $serverCache = {"http://localhost:' + server.info.port + '/script": {"data":"<script>test<\\/script><\\!-- foo --><script>test<\\/script>"}};</script></body>\n</html>\n');
             done();
           }
         });
