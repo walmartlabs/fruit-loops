@@ -2,7 +2,14 @@
 
 ## Development
 
-[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.9.1...master)
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.9.2...master)
+
+## v0.9.2 - July 28th, 2014
+- [#38](https://github.com/walmartlabs/fruit-loops/issues/38) - serverCache can leave residual data if </script> exists in content ([@kpdecker](https://api.github.com/users/kpdecker))
+- Fix incorrect global </script> replace in toJSON - 3ff398f
+- Push ajax test coverage to 100% - 50dfa77
+
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.9.1...v0.9.2)
 
 ## v0.9.1 - July 10th, 2014
 - Use _redirect flag rather than instanceOf - a27207e
