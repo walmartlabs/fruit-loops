@@ -2,7 +2,15 @@
 
 ## Development
 
-[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.9.2...master)
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.10.0...master)
+
+## v0.10.0 - August 6th, 2014
+- Further isolate client from fruit loops code - e0cb0bd
+
+Compatibility notes:
+- Fruit Loops APIs have been moved to the window.FruitLoops object. Deprecated delegates are in place but will be removed prior to the 1.0 release.
+
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.9.2...v0.10.0)
 
 ## v0.9.2 - July 28th, 2014
 - [#38](https://github.com/walmartlabs/fruit-loops/issues/38) - serverCache can leave residual data if </script> exists in content ([@kpdecker](https://api.github.com/users/kpdecker))
