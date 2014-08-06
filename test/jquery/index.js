@@ -17,7 +17,9 @@ describe('$', function() {
       }
     };
     window.self = window;
-    dom.document(window);
+    window.document = {
+      defaultView: window
+    };
     dom.navigator(window, {userAgent: ''});
     inst = $(window, '');
   });
