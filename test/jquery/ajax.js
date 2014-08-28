@@ -111,6 +111,7 @@ describe('ajax', function() {
   });
   afterEach(function() {
     inst.reset();
+    Date.now.restore && Date.now.restore();
   });
 
   it('should extend $', function() {
@@ -239,6 +240,15 @@ describe('ajax', function() {
     it('should short circuit cached requests', function(done) {
       inst = ajax(window, Exec.create(function(err) { throw err; }), policy);
 
+      var now = 0;
+      sinon.stub(Date, 'now', function() {
+        if (now) {
+          return now;
+        } else {
+          return now++;
+        }
+      });
+
       $.ajax({
         url: 'http://localhost:' + server.info.port + '/',
         success: function(data, status, xhr) {
@@ -257,6 +267,22 @@ describe('ajax', function() {
                 xhr.readyState.should.equal(4);
 
                 inst.on('complete', function() {
+                  inst.log().should.eql([
+                    {
+                      url: 'http://localhost:' + server.info.port + '/',
+                      method: undefined,
+                      status: 'success',
+                      statusCode: 200,
+                      duration: 1
+                    },
+                    {
+                      url: 'http://localhost:' + server.info.port + '/',
+                      method: undefined,
+                      status: 'success',
+                      statusCode: 200,
+                      duration: 0
+                    }
+                  ]);
                   getSpy.callCount.should.equal(1);
                   done();
                 });
