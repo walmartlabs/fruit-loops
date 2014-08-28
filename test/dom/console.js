@@ -5,8 +5,10 @@ describe('dom.console', function() {
   var window;
   beforeEach(function() {
     window = {
-      _id: 42,
-      _start: [0,0]
+      FruitLoops: {
+        id: 42,
+        start: [0,0]
+      },
     };
   });
 

@@ -65,7 +65,7 @@ describe('#pool', function() {
         page.window.$serverSide.should.be.true;
         page.window.loadedCallback = true;
 
-        ids[page.window._id] = true;
+        ids[page.window.FruitLoops.id] = true;
       },
       navigated: function(page, existingPage) {
         existingPage.should.be.false;
@@ -117,7 +117,7 @@ describe('#pool', function() {
         page.window.$serverSide.should.be.true;
         page.window.loadedCallback = true;
 
-        ids[page.window._id] = true;
+        ids[page.window.FruitLoops.id] = true;
       },
       navigated: function(page, existingPage) {
         existingPage.should.equal(++navigated > 2);
@@ -179,7 +179,7 @@ describe('#pool', function() {
         page.window.$serverSide.should.be.true;
         page.window.loadedCallback = true;
 
-        ids[page.window._id] = true;
+        ids[page.window.FruitLoops.id] = true;
       },
       navigated: function(page, existingPage) {
         existingPage.should.be.false;
@@ -222,12 +222,12 @@ describe('#pool', function() {
       host: 'winning',
       index: __dirname + '/artifacts/script-page.html',
       loaded: function(page) {
-        ids[page.window._id] = true;
+        ids[page.window.FruitLoops.id] = true;
       },
       navigated: function(page, existingPage) {
         existingPage.should.be.false;
 
-        ids[page.window._id] = true;
+        ids[page.window.FruitLoops.id] = true;
 
         page.window.emit();
       }
