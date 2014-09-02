@@ -65,6 +65,12 @@ describe('ajax', function() {
         }
       },
       {
+        path: '/timeout',
+        method: 'GET',
+        handler: function(req, reply) {
+        }
+      },
+      {
         path: '/ttl/{duration}',
         method: 'GET',
         config: {jsonp: 'callback'},
@@ -496,6 +502,75 @@ describe('ajax', function() {
         done();
       });
       xhrReturn.abort();
+    });
+
+    it('should handle http timeouts', function(done) {
+      var start = Date.now();
+
+      var errorCalled;
+      var xhrReturn = $.ajax({
+        timeout: 1000,
+        url: 'http://localhost:' + server.info.port + '/timeout',
+        success: function(data, status, xhr) {
+          throw new Error('Should not have been called');
+        },
+        error: function(xhr, status, err) {
+          status.should.equal('error');
+
+          xhr.should.equal(xhrReturn);
+          xhr.responseText.should.equal('');
+          xhr.readyState.should.equal(4);
+          errorCalled = true;
+        },
+        complete: function(xhr, status) {
+          should.exist(errorCalled);
+
+          status.should.equal('error');
+
+          xhr.should.equal(xhrReturn);
+          xhr.readyState.should.equal(4);
+          (Date.now() - start).should.be.lessThan(500);
+
+          inst.on('complete', function() {
+            done();
+          });
+        }
+      });
+      xhrReturn.readyState.should.equal(2);
+    });
+
+    it('should handle client http timeouts', function(done) {
+      inst = ajax(window, exec);
+
+      var errorCalled;
+      var xhrReturn = $.ajax({
+        timeout: 100,
+        url: 'http://localhost:' + server.info.port + '/timeout',
+        success: function(data, status, xhr) {
+          throw new Error('Should not have been called');
+        },
+        error: function(xhr, status, err) {
+          status.should.equal('error');
+
+          xhr.should.equal(xhrReturn);
+          xhr.responseText.should.equal('');
+          xhr.readyState.should.equal(4);
+          errorCalled = true;
+        },
+        complete: function(xhr, status) {
+          should.exist(errorCalled);
+
+          status.should.equal('error');
+
+          xhr.should.equal(xhrReturn);
+          xhr.readyState.should.equal(4);
+
+          inst.on('complete', function() {
+            done();
+          });
+        }
+      });
+      xhrReturn.readyState.should.equal(2);
     });
   });
 
