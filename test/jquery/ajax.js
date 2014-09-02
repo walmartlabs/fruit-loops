@@ -238,7 +238,7 @@ describe('ajax', function() {
       xhrReturn.readyState.should.equal(2);
     });
     it('should short circuit cached requests', function(done) {
-      inst = ajax(window, Exec.create(function(err) { throw err; }), policy);
+      inst = ajax(window, Exec.create(function(err) { throw err; }), {cache: policy});
 
       var now = 0;
       sinon.stub(Date, 'now', function() {
@@ -294,7 +294,7 @@ describe('ajax', function() {
       });
     });
     it('should NOP pending cache responses on reset', function(done) {
-      inst = ajax(window, Exec.create(function(err) { throw err; }), policy);
+      inst = ajax(window, Exec.create(function(err) { throw err; }), {cache: policy});
 
       $.ajax({
         url: 'http://localhost:' + server.info.port + '/',
@@ -685,7 +685,7 @@ describe('ajax', function() {
 
     it('should pull ttl from cached elements', function(done) {
       var cache = {};
-      inst = ajax(window, Exec.create(function(err) { throw err; }), policy);
+      inst = ajax(window, Exec.create(function(err) { throw err; }), {cache: policy});
 
       $.ajax({
         url: 'http://localhost:' + server.info.port + '/ttl/5',
