@@ -377,11 +377,13 @@ describe('page', function() {
             callback.should.be.false;
             page.window.emit('ajax');
           },
-          callback: function(err, html) {
+          callback: function(err, html, meta) {
             callback = true;
 
             should.not.exist(err);
             html.should.equal('<!doctype html>\n<html>\n  <body>foo<script>var $serverCache = {};</script></body>\n</html>\n');
+            meta.pending.should.equal(0);
+            meta.maxPending.should.equal(1);
             done();
           }
         });
@@ -473,7 +475,10 @@ describe('page', function() {
             });
             page.window.emit();
           },
-          callback: function(err, html) {
+          callback: function(err, html, meta) {
+            meta.pending.should.equal(2);
+            meta.maxPending.should.equal(2);
+
             setTimeout(function() {
               done();
             }, 100);
@@ -500,8 +505,11 @@ describe('page', function() {
             });
             page.window.location.assign('/bar');
           },
-          callback: function(err, html) {
+          callback: function(err, html, meta) {
             html.should.eql({redirect: '/bar'});
+            meta.pending.should.equal(2);
+            meta.maxPending.should.equal(2);
+
             setTimeout(function() {
               done();
             }, 100);
@@ -530,8 +538,11 @@ describe('page', function() {
               throw new Error('You fail');
             });
           },
-          callback: function(err, html) {
+          callback: function(err, html, meta) {
             err.toString().should.match(/You fail/);
+            meta.pending.should.equal(2);
+            meta.maxPending.should.equal(2);
+
             setTimeout(function() {
               done();
             }, 100);
@@ -581,9 +592,11 @@ describe('page', function() {
           page.window.emit('events');
           page.window.emit();
         },
-        callback: function(err, html) {
+        callback: function(err, html, meta) {
           should.not.exist(err);
           html.should.equal('<!doctype html>\n<html>\n  <body>foo<script>var $serverCache = {};</script></body>\n</html>\n');
+          meta.pending.should.equal(0);
+          meta.maxPending.should.equal(1);
           done();
         }
       });
