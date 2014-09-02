@@ -443,6 +443,57 @@ describe('page', function() {
           }
         });
       });
+      it('should wait until end of event loop to determine emit completion', function(done) {
+        this.clock.restore();
+
+        var timeoutSpy = this.spy(),
+            ajaxSpy = this.spy(),
+            callback = false;
+
+        page = fruitLoops.page({
+          userAgent: 'anything but android',
+          url: {
+            path: '/foo'
+          },
+          index: __dirname + '/artifacts/empty-page.html',
+          loaded: function(page) {
+            callback.should.be.false;
+
+            page.window.emit('events');
+            console.log('emit run');
+            page.window.setTimeout(timeoutSpy, 25);
+            page.window.$.ajax({
+              url: 'http://localhost:' + server.info.port + '/',
+              complete: function() {
+                page.window.setTimeout(timeoutSpy, 10);
+                ajaxSpy();
+              }
+            });
+          },
+          callback: function(err, html, meta) {
+            callback = true;
+
+            timeoutSpy.should.have.been.calledTwice;
+            ajaxSpy.should.have.been.calledOnce;
+
+            meta.taskLog.length.should.eql(4);
+            _.pluck(meta.taskLog, 'type').should.eql(['beforeExec', 'timeout', 'ajax', 'timeout']);
+            _.pluck(meta.taskLog, 'id').should.eql([1, 0, 0, 1]);
+            meta.taskLog[2].should.have.properties({
+              type: 'ajax',
+              id: 0,
+              url: 'http://localhost:' + server.info.port + '/',
+              statusCode: 200,
+              status: 'success',
+              cached: true
+            });
+
+            should.not.exist(err);
+            html.should.equal('<!doctype html>\n<html>\n  <body>foo<script>var $serverCache = {"http://localhost:' + server.info.port + '/": {"data":"get!"}};</script></body>\n</html>\n');
+            done();
+          }
+        });
+      });
       it('should emit events if no events pending', function(done) {
         var callback = false;
 
