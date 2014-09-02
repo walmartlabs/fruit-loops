@@ -2,7 +2,25 @@
 
 ## Development
 
-[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.10.0...master)
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.11.0...master)
+
+## v0.11.0 - September 2nd, 2014
+- [#39](https://github.com/walmartlabs/fruit-loops/issues/39) - Determine if emit should occur immediately or after event loop ([@kpdecker](https://api.github.com/users/kpdecker))
+- [#40](https://github.com/walmartlabs/fruit-loops/issues/40) - Add timeout option to ajax calls ([@kpdecker](https://api.github.com/users/kpdecker))
+- [#16](https://github.com/walmartlabs/fruit-loops/issues/16) - Improve logging ([@kpdecker](https://api.github.com/users/kpdecker))
+- [#41](https://github.com/walmartlabs/fruit-loops/issues/41) - Avoid instantiating new location objects on navigate ([@kpdecker](https://api.github.com/users/kpdecker))
+- Use opaque id for client async timeout values - f3f493a
+- Log information regarding page ajax requests - 4ab4ad1
+- Move start and id variable to FruitLoops object - 2fc30e1
+
+Compatibility notes:
+- *ajax* and *events* emit now allow continuation if additional waiting operations come in on the current tick
+- Timeout operations no longer return Node objects
+- The following objects have been moved from `window` to `FruitLoops`
+  - `window._id` -> `FruitLoops.id`
+  - `window._start` -> `FruitLoops.start`
+
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.10.0...v0.11.0)
 
 ## v0.10.0 - August 6th, 2014
 - Further isolate client from fruit loops code - e0cb0bd
