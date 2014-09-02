@@ -103,8 +103,8 @@ describe('ajax', function() {
       });
     });
   });
-  after(function(done) {
-    server.stop(done);
+  after(function() {
+    server.stop();
   });
   beforeEach(function() {
     getSpy.reset();
@@ -811,6 +811,47 @@ describe('ajax', function() {
           });
         }
       });
+    });
+
+    it('should handle cached http timeouts', function(done) {
+      var clock = this.clock;
+
+      var start = Date.now();
+
+      var errorCalled;
+      inst.reset();
+      inst = ajax(window, exec, {timeout: 100, cache: policy});
+
+      // this.clock.restore();
+      var xhrReturn = $.ajax({
+        url: 'http://localhost:' + server.info.port + '/timeout',
+        success: function(data, status, xhr) {
+          throw new Error('Should not have been called');
+        },
+        error: function(xhr, status, err) {
+          status.should.equal('error');
+
+          xhr.should.equal(xhrReturn);
+          xhr.responseText.should.equal('');
+          xhr.readyState.should.equal(4);
+          errorCalled = true;
+        },
+        complete: function(xhr, status) {
+          should.exist(errorCalled);
+
+          status.should.equal('error');
+
+          xhr.should.equal(xhrReturn);
+          xhr.readyState.should.equal(4);
+
+          inst.on('complete', function() {
+            console.log('complete');
+            done();
+          });
+        }
+      });
+      xhrReturn.readyState.should.equal(2);
+      this.clock.tick(100);
     });
 
     it('should report cache errors but succeed', function(done) {
