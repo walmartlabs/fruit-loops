@@ -2,7 +2,12 @@
 
 ## Development
 
-[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.11.0...master)
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.11.1...master)
+
+## v0.11.1 - September 2nd, 2014
+- Cancel client request for cached timeout - a07bf77
+
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.11.0...v0.11.1)
 
 ## v0.11.0 - September 2nd, 2014
 - [#39](https://github.com/walmartlabs/fruit-loops/issues/39) - Determine if emit should occur immediately or after event loop ([@kpdecker](https://api.github.com/users/kpdecker))
