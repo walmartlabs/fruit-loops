@@ -211,9 +211,6 @@ The returned pool instance consists of:
     index: __dirname + '/artifacts/pool-page.html',
     navigated: function(page, existingPage) {
       if (existingPage) {
-        // We need to reset the location value as backbone caches it
-        page.window.Backbone.history.location = page.window.location;
-
         // Force backbone navigation if the page has been previously used.
         page.window.Backbone.history.loadUrl();
       }
