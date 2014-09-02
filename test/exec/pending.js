@@ -11,18 +11,48 @@ describe('pending exec', function() {
 
   it('should init clean', function() {
     pending.pending().should.equal(0);
+    pending.log().should.eql([]);
   });
 
   it('should push events', function() {
     pending.push('test', 123, function() {});
     pending.pending().should.equal(1);
+    pending.log().should.eql([
+      {
+        type: 'test',
+        id: 123,
+        start: 10
+      }
+    ]);
   });
   describe('#pop', function() {
     it('should pop events', function() {
       pending.push('test', 123, function() {});
+      this.clock.tick(10);
       pending.pop('test', 123);
       pending.pending().should.equal(0);
+      pending.log().should.eql([
+        {
+          type: 'test',
+          id: 123,
+          start: 10,
+          duration: 10
+        }
+      ]);
       popSpy.should.have.been.calledOnce;
+    });
+    it('should pop events with log data', function() {
+      pending.push('test', 123, function() {});
+      pending.pop('test', 123, {foo: 'bar'});
+      pending.log().should.eql([
+        {
+          type: 'test',
+          id: 123,
+          start: 10,
+          duration: 0,
+          foo: 'bar'
+        }
+      ]);
     });
     it('should not throw on not found', function() {
       pending.push('test', 123, function() {});
@@ -38,6 +68,33 @@ describe('pending exec', function() {
       pending.push('test', 123, spy);
 
       pending.cancel('test', 123);
+      pending.log().should.eql([
+        {
+          type: 'test',
+          id: 123,
+          start: 10,
+          duration: 0,
+          cancelled: true
+        }
+      ]);
+      spy.callCount.should.equal(1);
+      popSpy.should.have.been.calledOnce;
+    });
+    it('should cancel events with log data', function() {
+      var spy = this.spy();
+      pending.push('test', 123, spy);
+
+      pending.cancel('test', 123, {foo: 'bar'});
+      pending.log().should.eql([
+        {
+          type: 'test',
+          id: 123,
+          start: 10,
+          duration: 0,
+          foo: 'bar',
+          cancelled: true
+        }
+      ]);
       spy.callCount.should.equal(1);
       popSpy.should.have.been.calledOnce;
     });

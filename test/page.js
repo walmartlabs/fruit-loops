@@ -1,4 +1,5 @@
-var fruitLoops = require('../lib'),
+var _ = require('lodash'),
+    fruitLoops = require('../lib'),
     ajax = require('../lib/jquery/ajax'),
     fs = require('fs'),
     hapi = require('hapi'),
@@ -382,8 +383,9 @@ describe('page', function() {
 
             should.not.exist(err);
             html.should.equal('<!doctype html>\n<html>\n  <body>foo<script>var $serverCache = {};</script></body>\n</html>\n');
-            meta.pending.should.equal(0);
-            meta.maxPending.should.equal(1);
+            meta.taskLog.length.should.eql(1);
+            meta.incompleteTasks.should.equal(0);
+            meta.maxTasks.should.equal(1);
             done();
           }
         });
@@ -416,13 +418,24 @@ describe('page', function() {
                 ajaxSpy();
               }
             });
-
           },
-          callback: function(err, html) {
+          callback: function(err, html, meta) {
             callback = true;
 
             timeoutSpy.should.have.been.calledTwice;
             ajaxSpy.should.have.been.calledOnce;
+
+            meta.taskLog.length.should.eql(4);
+            _.pluck(meta.taskLog, 'type').should.eql(['beforeExec', 'timeout', 'ajax', 'timeout']);
+            _.pluck(meta.taskLog, 'id').should.eql([1, 0, 0, 1]);
+            meta.taskLog[2].should.have.properties({
+              type: 'ajax',
+              id: 0,
+              url: 'http://localhost:' + server.info.port + '/',
+              statusCode: 200,
+              status: 'success',
+              cached: true
+            });
 
             should.not.exist(err);
             html.should.equal('<!doctype html>\n<html>\n  <body>foo<script>var $serverCache = {"http://localhost:' + server.info.port + '/": {"data":"get!"}};</script></body>\n</html>\n');
@@ -476,8 +489,8 @@ describe('page', function() {
             page.window.emit();
           },
           callback: function(err, html, meta) {
-            meta.pending.should.equal(2);
-            meta.maxPending.should.equal(2);
+            meta.incompleteTasks.should.equal(2);
+            meta.maxTasks.should.equal(2);
 
             setTimeout(function() {
               done();
@@ -507,8 +520,8 @@ describe('page', function() {
           },
           callback: function(err, html, meta) {
             html.should.eql({redirect: '/bar'});
-            meta.pending.should.equal(2);
-            meta.maxPending.should.equal(2);
+            meta.incompleteTasks.should.equal(2);
+            meta.maxTasks.should.equal(2);
 
             setTimeout(function() {
               done();
@@ -540,8 +553,8 @@ describe('page', function() {
           },
           callback: function(err, html, meta) {
             err.toString().should.match(/You fail/);
-            meta.pending.should.equal(2);
-            meta.maxPending.should.equal(2);
+            meta.incompleteTasks.should.equal(2);
+            meta.maxTasks.should.equal(2);
 
             setTimeout(function() {
               done();
@@ -595,8 +608,8 @@ describe('page', function() {
         callback: function(err, html, meta) {
           should.not.exist(err);
           html.should.equal('<!doctype html>\n<html>\n  <body>foo<script>var $serverCache = {};</script></body>\n</html>\n');
-          meta.pending.should.equal(0);
-          meta.maxPending.should.equal(1);
+          meta.incompleteTasks.should.equal(0);
+          meta.maxTasks.should.equal(1);
           done();
         }
       });

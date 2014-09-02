@@ -162,7 +162,14 @@ Creates a new page object with the given options.
 
 Available options:
 - `index`: Path to the bootstrap file that is used to initialize the page instance
-- `callback(err, html)`: Callback called when the page is emitted.
+- `callback(err, html, meta)`: Callback called when the page is emitted. Returned data includes:
+  - `html`: HTML content of the page at emit time
+  - `meta`: Metadata regarding the rendering cycle. Includes:
+    - `status`: HTTP Status code for the response
+    - `cache`: Minimum cache values of all components used in the response.
+    - `taskLog`: List of tasks such as AJAX requests made along with basic response and duration info.
+    - `incompleteTasks`: Number of pending operations that were running at the time of emit.
+    - `maxTasks`: Maximum number of concurrent tasks running at any given time for the response.
 - `beforeExec(page, next)`: Optional callback called after the DOM has loaded, but prior to any scripts executing. Must call `next` once complete to continue page execution.
 - `loaded(page)`: Optional callback called after the DOM and all scripts have been loaded
 - `finalize(page)`: Optional callback called just prior to the callback method being called.

@@ -9,6 +9,7 @@ describe('ajax', function() {
   var server,
       window,
       $,
+      exec,
       inst,
       policy,
       getSpy;
@@ -107,7 +108,8 @@ describe('ajax', function() {
       location: 'http://localhost:' + server.info.port + '/foo/index.html',
       $: $
     };
-    inst = ajax(window, Exec.create(function(err) { throw err; }));
+    exec = Exec.create(function(err) { throw err; });
+    inst = ajax(window, exec, {timeout: 100});
   });
   afterEach(function() {
     inst.reset();
@@ -238,7 +240,7 @@ describe('ajax', function() {
       xhrReturn.readyState.should.equal(2);
     });
     it('should short circuit cached requests', function(done) {
-      inst = ajax(window, Exec.create(function(err) { throw err; }), {cache: policy});
+      inst = ajax(window, exec, {cache: policy});
 
       var now = 0;
       sinon.stub(Date, 'now', function() {
@@ -267,28 +269,36 @@ describe('ajax', function() {
                 xhr.readyState.should.equal(4);
 
                 inst.on('complete', function() {
-                  inst.log().should.eql([
-                    {
-                      url: 'http://localhost:' + server.info.port + '/',
-                      method: undefined,
-                      status: 'success',
-                      statusCode: 200,
-                      duration: 1,
-                      cacheLookup: 0,
-                      cached: false
-                    },
-                    {
-                      url: 'http://localhost:' + server.info.port + '/',
-                      method: undefined,
-                      status: 'success',
-                      statusCode: 200,
-                      duration: 0,
-                      cacheLookup: 0,
-                      cached: true
-                    }
-                  ]);
-                  getSpy.callCount.should.equal(1);
-                  done();
+                  setImmediate(function() {
+                    exec.pending.log().should.eql([
+                      {
+                        type: 'ajax',
+                        id: 0,
+                        url: 'http://localhost:' + server.info.port + '/',
+                        method: undefined,
+                        status: 'success',
+                        statusCode: 200,
+                        start: 0,
+                        duration: 1,
+                        cacheLookup: 0,
+                        cached: false
+                      },
+                      {
+                        type: 'ajax',
+                        id: 1,
+                        url: 'http://localhost:' + server.info.port + '/',
+                        method: undefined,
+                        status: 'success',
+                        statusCode: 200,
+                        start: 1,
+                        duration: 0,
+                        cacheLookup: 0,
+                        cached: true
+                      }
+                    ]);
+                    getSpy.callCount.should.equal(1);
+                    done();
+                  });
                 });
               }
             });
@@ -298,7 +308,7 @@ describe('ajax', function() {
       });
     });
     it('should NOP pending cache responses on reset', function(done) {
-      inst = ajax(window, Exec.create(function(err) { throw err; }), {cache: policy});
+      inst = ajax(window, exec, {cache: policy});
 
       $.ajax({
         url: 'http://localhost:' + server.info.port + '/',
@@ -689,7 +699,7 @@ describe('ajax', function() {
 
     it('should pull ttl from cached elements', function(done) {
       var cache = {};
-      inst = ajax(window, Exec.create(function(err) { throw err; }), {cache: policy});
+      inst = ajax(window, exec, {cache: policy});
 
       $.ajax({
         url: 'http://localhost:' + server.info.port + '/ttl/5',
@@ -737,7 +747,7 @@ describe('ajax', function() {
 
       client.start(function () {
         policy = new Catbox.Policy({expiresIn: 5000}, client, 'example');
-        inst = ajax(window, Exec.create(function(err) { throw err; }), {cache: policy});
+        inst = ajax(window, exec, {cache: policy});
 
         $.ajax({
           url: 'http://localhost:' + server.info.port + '/ttl/5',
@@ -749,12 +759,15 @@ describe('ajax', function() {
               xhr.readyState.should.equal(4);
               status.should.equal('success');
 
-              inst.log().should.eql([
+              exec.pending.log().should.eql([
                 {
+                  type: 'ajax',
+                  id: 0,
                   url: 'http://localhost:' + server.info.port + '/ttl/5',
                   method: undefined,
                   status: 'success',
                   statusCode: 200,
+                  start: 10,
                   duration: 0,
                   cacheLookup: err,
                   cached: false
