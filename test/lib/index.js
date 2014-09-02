@@ -11,6 +11,7 @@ process.mainModule.children.forEach(function(child) {
 
 global.should = chai.should();
 chai.use(sinonChai);
+chai.use(require('chai-properties'));
 
 var sinon = require('sinon');
 
