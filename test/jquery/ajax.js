@@ -273,14 +273,18 @@ describe('ajax', function() {
                       method: undefined,
                       status: 'success',
                       statusCode: 200,
-                      duration: 1
+                      duration: 1,
+                      cacheLookup: 0,
+                      cached: false
                     },
                     {
                       url: 'http://localhost:' + server.info.port + '/',
                       method: undefined,
                       status: 'success',
                       statusCode: 200,
-                      duration: 0
+                      duration: 0,
+                      cacheLookup: 0,
+                      cached: true
                     }
                   ]);
                   getSpy.callCount.should.equal(1);
@@ -721,6 +725,45 @@ describe('ajax', function() {
             });
           });
         }
+      });
+    });
+
+    it('should report cache errors but succeed', function(done) {
+      var client = new Catbox.Client('catbox-memory'),
+          err = new Error('puke');
+      client.get = function(key, callback) {
+        callback(err);
+      };
+
+      client.start(function () {
+        policy = new Catbox.Policy({expiresIn: 5000}, client, 'example');
+        inst = ajax(window, Exec.create(function(err) { throw err; }), {cache: policy});
+
+        $.ajax({
+          url: 'http://localhost:' + server.info.port + '/ttl/5',
+          success: function(data, status, xhr) {
+            data.should.eql({data: 'ttl!'});
+          },
+          complete: function(xhr, status) {
+            setImmediate(function() {
+              xhr.readyState.should.equal(4);
+              status.should.equal('success');
+
+              inst.log().should.eql([
+                {
+                  url: 'http://localhost:' + server.info.port + '/ttl/5',
+                  method: undefined,
+                  status: 'success',
+                  statusCode: 200,
+                  duration: 0,
+                  cacheLookup: err,
+                  cached: false
+                }
+              ]);
+              done();
+            });
+          }
+        });
       });
     });
   });
