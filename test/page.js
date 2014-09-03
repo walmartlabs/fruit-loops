@@ -86,6 +86,25 @@ describe('page', function() {
       }
     });
   });
+  it('should handle resolver error', function(done) {
+    var execCalled;
+    page = fruitLoops.page({
+      userAgent: 'anything but android',
+      url: {
+        path: '/foo'
+      },
+      index: __dirname + '/artifacts/script-page.html',
+      resolver: function(href, page) {
+        execCalled = true;
+        throw new Error('failed');
+      },
+      callback: function(err) {
+        err.should.be.instanceOf(Error);
+        err.message.should.equal('failed');
+        done();
+      }
+    });
+  });
   it('should handle before script error', function(done) {
     var execCalled;
     page = fruitLoops.page({
@@ -155,6 +174,25 @@ describe('page', function() {
         return __dirname + '/artifacts/not-a-script.js';
       },
       callback: function(err) {
+        err.should.be.instanceOf(Error);
+        done();
+      }
+    });
+  });
+  it('should error on external syntax error', function(done) {
+    var callback = this.spy();
+
+    page = fruitLoops.page({
+      userAgent: 'anything but android',
+      url: {
+        path: '/foo'
+      },
+      index: __dirname + '/artifacts/script-page.html',
+      resolver: function() {
+        return __dirname + '/artifacts/syntax-error.js';
+      },
+      callback: function(err) {
+        console.log(err);
         err.should.be.instanceOf(Error);
         done();
       }
