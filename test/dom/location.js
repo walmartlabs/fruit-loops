@@ -1,9 +1,15 @@
 var location = require('../../lib/dom/location');
 
 describe('dom.location', function() {
-  var window;
+  var window,
+      spy;
   beforeEach(function() {
+    spy = this.spy();
+
     window = {
+      FruitLoops: {
+        redirect: spy
+      },
       document: {}
     };
   });
@@ -36,29 +42,23 @@ describe('dom.location', function() {
   });
 
   it('should redirect on assign()', function() {
-    var spy = this.spy();
-
     location.preInit(window);
-    location(window, 'https://foo.bar:8080/foo/bar?baz=bat&boz=', spy);
+    location(window, 'https://foo.bar:8080/foo/bar?baz=bat&boz=');
     window.location.assign('/foo');
 
     spy.should.have.been.calledWith('/foo');
   });
 
   it('should redirect on window field assign', function() {
-    var spy = this.spy();
-
     location.preInit(window);
-    location(window, 'https://foo.bar:8080/foo/bar?baz=bat&boz=', spy);
+    location(window, 'https://foo.bar:8080/foo/bar?baz=bat&boz=');
     window.location = '/foo';
 
     spy.should.have.been.calledWith('/foo');
   });
   it('should redirect on document field assign', function() {
-    var spy = this.spy();
-
     location.preInit(window);
-    location(window, 'https://foo.bar:8080/foo/bar?baz=bat&boz=', spy);
+    location(window, 'https://foo.bar:8080/foo/bar?baz=bat&boz=');
     window.location = '/foo';
 
     spy.should.have.been.calledWith('/foo');

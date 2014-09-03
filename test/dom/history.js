@@ -1,17 +1,24 @@
 var history = require('../../lib/dom/history');
 
 describe('history', function() {
+  var spy,
+      window;
+  beforeEach(function() {
+    spy = this.spy();
+    window = {
+      FruitLoops: {
+        redirect: spy
+      }
+    };
+  });
   it('should extend the window', function() {
-    var window = {};
-    history(window, this.spy());
+    history(window);
     should.exist(window.history);
   });
 
   describe('#pushState', function() {
     it('should redirect', function() {
-      var spy = this.spy(),
-          window = {};
-      history(window, spy);
+      history(window);
 
       window.history.pushState('', '', 'foo');
       spy.calledWith('foo').should.be.true;
@@ -19,9 +26,7 @@ describe('history', function() {
   });
   describe('#replaceState', function() {
     it('should redirect', function() {
-      var spy = this.spy(),
-          window = {};
-      history(window, spy);
+      history(window);
 
       window.history.replaceState('', '', 'foo');
       spy.calledWith('foo').should.be.true;
