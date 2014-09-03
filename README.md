@@ -50,7 +50,7 @@ For a given page request cycle a few different stages occur, approximating the b
 
 ### Emit Behaviors
 
-Once the page has completed rendering it needs to notify the fruit-loops container that the response is ready for the user. This is done via the `emit` global method exposed in page's global on the the page object returned by the `#page` host API.
+Once the page has completed rendering it needs to notify the fruit-loops container that the response is ready for the user. This is done via the `emit` method.
 
 `emit` supports one of three modes:
 
@@ -468,13 +468,21 @@ In addition to the `$` APIs, Fruit Loops implements a variety of DOM and global 
 
   Constant flag. Set to `true`, allowing client code to differentiate between client and server contexts.
 
-- `emit(action)`
+- `FruitLoops.emit(action)`
 
    Begins the page output process. See [emit behaviors](#emit-behaviors) for more details.
 
-- `loadInContext(href, callback)`
+- `FruitLoops.loadInContext(href, callback)`
 
    Loads a given script. `href` should be a relative client script path. The `resolver` callback may be be used to remap this if needed. Upon completion `callback()` will be called.
+
+- `FruitLoops.statusCode(code)`
+
+    Sets the desired status code for the response. This does not terminate further page execution.
+
+- `FruitLoops.redirect(url)`
+
+    Stops further execution and emits a redirect to `url` as the page's response.
 
 - `setImmediate(callback)`
 
