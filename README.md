@@ -179,7 +179,10 @@ Available options:
 - `path`: Path of the page, including any query or hash information. The should be relative to the host's root.
 - `userAgent`: Use agent value used to seed the `window.navigator.userAgent` value.
 - `cacheResources`: Truthy to cache script and page resources within the javascript heap. When this is enabled, no attempt will be made to reload content from disk after it's initially loaded/parsed.
-- `ajaxCache`: Optional [Catbox Policy](https://github.com/spumko/catbox#policy) instance used to cache AJAX responses used to generate the page. All responses will be cached per the HTTP cache headers returned.
+- `ajax`: Object defining ajax request options
+  - `shortCircuit(options, callback)`: Optional method that may be used to provide alternative processing for the AJAX request. Should return truthy if the method can process the request and should preempt the normal AJAX request processing. This may be used with utilities like Hapi's `server.inject` to optimize local requests, for example. `callback` expects `callback(err, response, cache, report)` where `response` is an object with fields `{statusCode, data}`. `cache` and `report` are optional reporting parameters that match the Catbox return data.
+  - `cache`: Optional [Catbox Policy](https://github.com/spumko/catbox#policy) instance used to cache AJAX responses used to generate the page. All responses will be cached per the HTTP cache headers returned.
+  - `timeout`: Default timeout for AJAX requests. When client calls specify a timeout and this value is specified, the lower of the two values will be used as the effective timeout for the call. Defaults to no timeout.
 - `evil`: Truthy to enable dynamic code execution via `eval`, `Function`, and `setTimeout`. See [dynamic scripts](#dynamic-scripts) for more information.
 
 The returned page instance consists of:
