@@ -884,7 +884,6 @@ describe('ajax', function() {
           xhr.readyState.should.equal(4);
 
           inst.on('complete', function() {
-            console.log('complete');
             done();
           });
         }

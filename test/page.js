@@ -192,7 +192,6 @@ describe('page', function() {
         return __dirname + '/artifacts/syntax-error.js';
       },
       callback: function(err) {
-        console.log(err);
         err.should.be.instanceOf(Error);
         done();
       }
@@ -498,7 +497,6 @@ describe('page', function() {
             callback.should.be.false;
 
             page.window.emit('events');
-            console.log('emit run');
             page.window.setTimeout(timeoutSpy, 25);
             page.window.$.ajax({
               url: 'http://localhost:' + server.info.port + '/',
