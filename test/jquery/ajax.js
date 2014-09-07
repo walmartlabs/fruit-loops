@@ -157,6 +157,45 @@ describe('ajax', function() {
       });
       xhrReturn.readyState.should.equal(2);
     });
+    it('should allow short circuiting', function(done) {
+      inst = ajax(window, exec, {
+        shortCircuit: function(options, callback) {
+          setImmediate(function() {
+            callback(undefined, {
+                statusCode: 200,
+                data: {data: 'short!'}
+              });
+          });
+          return true;
+        }
+      });
+      var successCalled;
+      var xhrReturn = $.ajax({
+        url: 'http://localhost:' + server.info.port + '/',
+        success: function(data, status, xhr) {
+          data.should.eql({data: 'short!'});
+
+          status.should.equal('success');
+
+          xhr.should.equal(xhrReturn);
+          xhr.readyState.should.equal(4);
+          successCalled = true;
+        },
+        complete: function(xhr, status) {
+          should.exist(successCalled);
+
+          status.should.equal('success');
+
+          xhr.should.equal(xhrReturn);
+          xhr.readyState.should.equal(4);
+
+          inst.on('complete', function() {
+            done();
+          });
+        }
+      });
+      xhrReturn.readyState.should.equal(2);
+    });
     it('should handle POST requests', function(done) {
       var successCalled;
       var xhrReturn = $.ajax({
