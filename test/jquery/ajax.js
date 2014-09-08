@@ -611,6 +611,41 @@ describe('ajax', function() {
       });
       xhrReturn.readyState.should.equal(2);
     });
+    it('should allow short circuiting timeouts', function(done) {
+      this.clock.restore();
+
+      inst = ajax(window, exec, {
+        timeout: 100,
+        shortCircuit: function(options, callback) {
+          return true;
+        }
+      });
+      var errorCalled;
+      var xhrReturn = $.ajax({
+        url: 'http://localhost:' + server.info.port + '/',
+        error: function(xhr, status, err) {
+          status.should.equal('error');
+
+          xhr.should.equal(xhrReturn);
+          xhr.responseText.should.equal('');
+          xhr.readyState.should.equal(4);
+          errorCalled = true;
+        },
+        complete: function(xhr, status) {
+          should.exist(errorCalled);
+
+          status.should.equal('error');
+
+          xhr.should.equal(xhrReturn);
+          xhr.readyState.should.equal(4);
+
+          inst.on('complete', function() {
+            done();
+          });
+        }
+      });
+      xhrReturn.readyState.should.equal(2);
+    });
   });
 
   it('should record all complete', function(done) {
