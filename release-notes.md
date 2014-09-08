@@ -2,7 +2,20 @@
 
 ## Development
 
-[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.11.1...master)
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.12.0...master)
+
+## v0.12.0 - September 8th, 2014
+- Make source map lookup table a singleton - 542cfc0
+- Update ajax options to use their own object - c7dc89e
+- Allow short circuiting of ajax requests - 68c4c21
+- Include requested duration in setTimeout logs - 59c84f0
+- Implement Storage.clear method - 47f73c3
+- Move redirect method to FruitLoops object - 5e81107
+
+Compatibility notes:
+- `ajaxCache` and `ajaxTimeout` config options moved to `ajax.cache` and `ajax.timeout`
+
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.11.1...v0.12.0)
 
 ## v0.11.1 - September 2nd, 2014
 - Cancel client request for cached timeout - a07bf77
