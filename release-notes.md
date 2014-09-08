@@ -2,7 +2,12 @@
 
 ## Development
 
-[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.12.0...master)
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.12.1...master)
+
+## v0.12.1 - September 8th, 2014
+- Apply timeout options to shortcircuited requests - 0a037fd
+
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.12.0...v0.12.1)
 
 ## v0.12.0 - September 8th, 2014
 - Make source map lookup table a singleton - 542cfc0
