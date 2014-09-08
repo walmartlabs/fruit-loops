@@ -8,6 +8,7 @@ describe('exec', function() {
   beforeEach(function() {
     var self = this;
     globalHandler = this.spy(function(err)  { throw err; });
+    Exec.reset();
     exec = Exec.create(globalHandler);
     exec.debug = false;
 
