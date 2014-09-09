@@ -471,7 +471,7 @@ describe('page', function() {
               url: 'http://localhost:' + server.info.port + '/',
               statusCode: 200,
               status: 'success',
-              cached: true
+              cached: false
             });
 
             should.not.exist(err);
@@ -521,7 +521,7 @@ describe('page', function() {
               url: 'http://localhost:' + server.info.port + '/',
               statusCode: 200,
               status: 'success',
-              cached: true
+              cached: false
             });
 
             should.not.exist(err);
