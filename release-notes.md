@@ -2,7 +2,13 @@
 
 ## Development
 
-[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.12.1...master)
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.13.0...master)
+
+## v0.13.0 - September 10th, 2014
+- Allow metadata to be associated with page instance - 9a9c47e
+- Fix handing of no-cache elements for catbox gen - 6fc93ec
+
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.12.1...v0.13.0)
 
 ## v0.12.1 - September 8th, 2014
 - Apply timeout options to shortcircuited requests - 0a037fd
