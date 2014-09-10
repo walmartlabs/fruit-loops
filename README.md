@@ -184,6 +184,7 @@ Available options:
   - `cache`: Optional [Catbox Policy](https://github.com/spumko/catbox#policy) instance used to cache AJAX responses used to generate the page. All responses will be cached per the HTTP cache headers returned.
   - `timeout`: Default timeout for AJAX requests. When client calls specify a timeout and this value is specified, the lower of the two values will be used as the effective timeout for the call. Defaults to no timeout.
 - `evil`: Truthy to enable dynamic code execution via `eval`, `Function`, and `setTimeout`. See [dynamic scripts](#dynamic-scripts) for more information.
+- `metadata`: Metadata that is assigned to the page instance and may be used within callbacks.
 
 The returned page instance consists of:
 - `id`: Unique id value that may be used to identify the page
@@ -205,7 +206,7 @@ Shares the same options as the `page` method with a few distinctions:
 - When `cacheResources` is falsy a `fs.watch` will be performed on all script files loaded into the pool. Should one change then the pool will be restarted. This will preempt any running requests, leaving them in an indeterminate state. In production it's recommended that this flag be set to `true`.
 
 The returned pool instance consists of:
-- `navigate(path, callback)`: Renders a given path and returns it to callback.
+- `navigate(path [, metadata], callback)`: Renders a given path and returns it to callback. Optional `metadata` argument may be passed to override the initial metadata for a given page.
 - `dispose()`: Should be called after a pool is no longer needed in order to clean up resources.
 
 ```javascript

@@ -23,6 +23,7 @@ describe('#pool', function() {
       },
       navigated: function(page, existingPage) {
         existingPage.should.be.false;
+        page.metadata.should.equal('meta!');
 
         page.window.navigated();
         page.emit('events');
@@ -35,7 +36,7 @@ describe('#pool', function() {
         done();
       }
     });
-    pool.navigate('/bar', function(err, html) {
+    pool.navigate('/bar', 'meta!', function(err, html) {
       emitCalled = true;
       should.not.exist(err);
       html.should.match(/"location-info">http:\/\/winning\/bar true<\/div>/);
