@@ -164,7 +164,15 @@ describe('#pool', function() {
       if (returned >= 3) {
         _.keys(ids).length.should.equal(3);
 
-        done();
+        setImmediate(function() {
+          pool.info().should.eql({
+            queued: 0,
+            pages: 0,
+            free: 0
+          });
+
+          done();
+        });
       }
     }
 
