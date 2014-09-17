@@ -99,6 +99,26 @@ describe('$', function() {
     });
   });
 
+  describe('$.fn', function() {
+    it('should allow augmentation', function() {
+      inst = $(window, '<div></div>');
+      inst.$.fn.foo = function() {
+        return 'success';
+      };
+      inst.$('div').foo().should.equal('success');
+      should.not.exist(inst.$('div').bar);
+
+      inst.$.fn.bar = function() {
+        return 'success';
+      };
+      inst.$('div').bar().should.equal('success');
+
+      inst = $(window, '<div></div>');
+      should.not.exist(inst.$('div').foo);
+      should.not.exist(inst.$('div').bar);
+    });
+  });
+
   describe('#each', function() {
     it('should iterate arrays', function() {
       var spy = this.spy(function(i, value) {
