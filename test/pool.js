@@ -156,6 +156,184 @@ describe('#pool', function() {
       _done();
     });
   });
+  it('should reject requests above the queue size', function(done) {
+    this.clock.restore();
+
+    function _done() {
+      returned++;
+      if (returned >= 3) {
+        _.keys(ids).length.should.equal(1);
+
+        done();
+      }
+    }
+
+    var ids = {},
+        navigated = 0,
+        returned = 0;
+
+    pool = FruitLoops.pool({
+      poolSize: 1,
+      maxQueue: 1,
+      host: 'winning',
+      index: __dirname + '/artifacts/pool-page.html',
+      loaded: function(page) {
+        page.window.$.should.exist;
+        page.window.$serverSide.should.be.true;
+        page.window.loadedCallback = true;
+
+        ids[page.window.FruitLoops.id] = true;
+      },
+      navigated: function(page, existingPage) {
+        existingPage.should.equal(++navigated > 1);
+
+        page.window.navigated();
+        setTimeout(function() {
+          page.emit('events');
+        }, 10);
+      },
+      callback: function() {
+        throw new Error('should not be called');
+      }
+    });
+    pool.navigate('/bar', function(err, html, meta) {
+      should.not.exist(err);
+      html.should.match(/"location-info">http:\/\/winning\/bar true<\/div>/);
+      meta.status.should.equal(404);
+
+      _done();
+    });
+    pool.navigate('/baz', function(err, html, meta) {
+      should.not.exist(err);
+      html.should.match(/"location-info">http:\/\/winning\/baz true<\/div>/);
+      meta.status.should.equal(200);
+
+      _done();
+    });
+    pool.navigate('/bat', function(err, html, meta) {
+      err.should.match(/EQUEUEFULL/);
+      should.not.exist(html);
+      should.not.exist(meta);
+
+      pool.info().should.eql({queued: 1, pages: 1, free: 0});
+
+      _done();
+    });
+  });
+  it('should timeout requests in queue', function(done) {
+    this.clock.restore();
+
+    function _done() {
+      returned++;
+      if (returned >= 2) {
+        _.keys(ids).length.should.equal(1);
+
+        done();
+      }
+    }
+
+    var ids = {},
+        navigated = 0,
+        returned = 0;
+
+    pool = FruitLoops.pool({
+      poolSize: 1,
+      queueTimeout: 10,
+      host: 'winning',
+      index: __dirname + '/artifacts/pool-page.html',
+      loaded: function(page) {
+        page.window.$.should.exist;
+        page.window.$serverSide.should.be.true;
+        page.window.loadedCallback = true;
+
+        ids[page.window.FruitLoops.id] = true;
+      },
+      navigated: function(page, existingPage) {
+        existingPage.should.equal(++navigated > 1);
+
+        page.window.navigated();
+        setTimeout(function() {
+          page.emit('events');
+        }, 100);
+      },
+      callback: function() {
+        throw new Error('should not be called');
+      }
+    });
+    pool.navigate('/bar', function(err, html, meta) {
+      should.not.exist(err);
+      html.should.match(/"location-info">http:\/\/winning\/bar true<\/div>/);
+      meta.status.should.equal(404);
+
+      _done();
+    });
+    pool.navigate('/bat', function(err, html, meta) {
+      err.should.match(/EQUEUETIMEOUT/);
+      should.not.exist(html);
+      should.not.exist(meta);
+
+      pool.info().should.eql({queued: 0, pages: 1, free: 0});
+
+      _done();
+    });
+  });
+  it('should not-timeout requests in queue', function(done) {
+    this.clock.restore();
+
+    function _done() {
+      returned++;
+      if (returned >= 2) {
+        _.keys(ids).length.should.equal(1);
+
+        done();
+      }
+    }
+
+    var ids = {},
+        navigated = 0,
+        returned = 0;
+
+    pool = FruitLoops.pool({
+      poolSize: 1,
+      queueTimeout: 100,
+      host: 'winning',
+      index: __dirname + '/artifacts/pool-page.html',
+      loaded: function(page) {
+        page.window.$.should.exist;
+        page.window.$serverSide.should.be.true;
+        page.window.loadedCallback = true;
+
+        ids[page.window.FruitLoops.id] = true;
+      },
+      navigated: function(page, existingPage) {
+        existingPage.should.equal(++navigated > 1);
+
+        page.window.navigated();
+        setTimeout(function() {
+          page.emit('events');
+        }, 10);
+      },
+      callback: function() {
+        throw new Error('should not be called');
+      }
+    });
+    pool.navigate('/bar', function(err, html, meta) {
+      should.not.exist(err);
+      html.should.match(/"location-info">http:\/\/winning\/bar true<\/div>/);
+      meta.status.should.equal(404);
+
+      _done();
+    });
+    pool.navigate('/bat', function(err, html, meta) {
+      should.not.exist(err);
+      html.should.match(/"location-info">http:\/\/winning\/bat true<\/div>/);
+      meta.status.should.equal(200);
+
+      pool.info().should.eql({queued: 0, pages: 1, free: 0});
+
+      _done();
+    });
+  });
   it('should invalidate pages on error', function(done) {
     this.clock.restore();
 
