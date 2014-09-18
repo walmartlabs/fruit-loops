@@ -202,6 +202,8 @@ Creates a pool of page objects.
 Shares the same options as the `page` method with a few distinctions:
 - `path` and `callback` will be ignored. The values passed to `navigate` will be used instead.
 - Adds the `poolSize` option used to specify the number of pages to create at once.
+- Adds the `maxQueue` option used to limit the number of requests that can be queued at a given time. If set a `EQUEUEFULL` error will be returned if this limit is exceeded.
+- Add the `queueTimeout` option used to timeout requests that pending in the queue. If triggered this will return a `EQUEUETIMEOUT` error.
 - Adds `navigated(page, existingPage)` callback which is called after a page is reused. This should be used to notify the application that the path has changed, i.e. `Backbone.history.loadUrl()` or similar. Will be called for all `pool.navigated` calls. `existingPage` will be true when the page has been used in a previous render cycle.
 - When `cacheResources` is falsy a `fs.watch` will be performed on all script files loaded into the pool. Should one change then the pool will be restarted. This will preempt any running requests, leaving them in an indeterminate state. In production it's recommended that this flag be set to `true`.
 
