@@ -2,7 +2,15 @@
 
 ## Development
 
-[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.13.0...master)
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.14.0...master)
+
+## v0.14.0 - September 18th, 2014
+- [#43](https://github.com/walmartlabs/fruit-loops/pull/43) - Create a separate fn scope for each $ instance ([@kpdecker](https://api.github.com/users/kpdecker))
+- [#44](https://github.com/walmartlabs/fruit-loops/pull/44) - Allow for pool queue limits ([@kpdecker](https://api.github.com/users/kpdecker))
+- Convert Ajax to named class and explicitly clean - 8649171
+- Avoid stack retain in RedirectError - 7e29077
+
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.13.0...v0.14.0)
 
 ## v0.13.0 - September 10th, 2014
 - Allow metadata to be associated with page instance - 9a9c47e
