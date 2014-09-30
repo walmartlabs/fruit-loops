@@ -2,7 +2,14 @@
 
 ## Development
 
-[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.14.0...master)
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.14.1...master)
+
+## v0.14.1 - September 30th, 2014
+- [#48](https://github.com/walmartlabs/fruit-loops/pull/48) - Fix location reset ([@Candid](https://api.github.com/users/Candid))
+- [#47](https://github.com/walmartlabs/fruit-loops/pull/47) - An attempt to clean up ajax code related to cache ([@Candid](https://api.github.com/users/Candid))
+- Use report for ajax cached flag calculation - 2e764cb
+
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.14.0...v0.14.1)
 
 ## v0.14.0 - September 18th, 2014
 - [#43](https://github.com/walmartlabs/fruit-loops/pull/43) - Create a separate fn scope for each $ instance ([@kpdecker](https://api.github.com/users/kpdecker))
