@@ -63,4 +63,16 @@ describe('dom.location', function() {
 
     spy.should.have.been.calledWith('/foo');
   });
+  it('should reset search and query parts of url', function() {
+    location.preInit(window);
+    var loc = location(window, 'http://foo.bar/foo/bar?baz=bat&boz=');
+    loc.reset('http://foo1.bar1/foo1/bar1');
+    window.location.host.should.equal('foo1.bar1');
+    window.location.path.should.equal('/foo1/bar1');
+    window.location.origin.should.equal('http://foo1.bar1');
+    window.location.search.should.equal('');
+    window.location.query.should.eql({});
+    window.location.hash.should.equal('');
+    (window.location+'').should.equal('http://foo1.bar1/foo1/bar1');
+  });
 });
