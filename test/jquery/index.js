@@ -101,7 +101,8 @@ describe('$', function() {
 
   describe('$.fn', function() {
     it('should allow augmentation', function() {
-      inst = $(window, '<div></div>');
+      inst = $(window, '<div><span></span></div>');
+      window.$.fn.should.equal(inst.$.fn);
       inst.$.fn.foo = function() {
         return 'success';
       };
@@ -112,6 +113,7 @@ describe('$', function() {
         return 'success';
       };
       inst.$('div').bar().should.equal('success');
+      inst.$('div').find('span').bar().should.equal('success');
 
       inst = $(window, '<div></div>');
       should.not.exist(inst.$('div').foo);
