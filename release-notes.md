@@ -2,7 +2,12 @@
 
 ## Development
 
-[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.14.1...master)
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.14.2...master)
+
+## v0.14.2 - October 9th, 2014
+- Properly handle $.fn with derived $ instances - d28c062
+
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.14.1...v0.14.2)
 
 ## v0.14.1 - September 30th, 2014
 - [#48](https://github.com/walmartlabs/fruit-loops/pull/48) - Fix location reset ([@Candid](https://api.github.com/users/Candid))
