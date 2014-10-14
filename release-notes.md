@@ -2,7 +2,14 @@
 
 ## Development
 
-[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.14.2...master)
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.15.0...master)
+
+## v0.15.0 - October 14th, 2014
+- Expose hrtime to client space - 632d479
+- Add page.runScript API - 8e163c4
+- Optimize $ type checking - c0bc2f7
+
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.14.2...v0.15.0)
 
 ## v0.14.2 - October 9th, 2014
 - Properly handle $.fn with derived $ instances - d28c062
