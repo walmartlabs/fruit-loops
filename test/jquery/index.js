@@ -30,6 +30,13 @@ describe('$', function() {
     });
   });
 
+  describe('identify hotpath', function() {
+    it('should return the identity', function() {
+      var $el = inst.$('<div>');
+      $el.should.equal(inst.$($el));
+    });
+  });
+
   describe('document object', function() {
     it('should accept document object', function() {
       inst.$(window.document).should.be.instanceOf(Cheerio);
