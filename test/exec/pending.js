@@ -14,16 +14,23 @@ describe('pending exec', function() {
     pending.log().should.eql([]);
   });
 
-  it('should push events', function() {
-    pending.push('test', 123, function() {});
-    pending.pending().should.equal(1);
-    pending.log().should.eql([
-      {
-        type: 'test',
-        id: 123,
-        start: 10
-      }
-    ]);
+  describe('#push', function() {
+    it('should push events', function() {
+      pending.push('test', 123, function() {});
+      pending.pending().should.equal(1);
+      pending.log().should.eql([
+        {
+          type: 'test',
+          id: 123,
+          start: 10
+        }
+      ]);
+    });
+    it('should push without log', function() {
+      pending.push('test', 123, function() {}, true);
+      pending.pending().should.equal(1);
+      pending.log().should.eql([]);
+    });
   });
   describe('#pop', function() {
     it('should pop events', function() {
