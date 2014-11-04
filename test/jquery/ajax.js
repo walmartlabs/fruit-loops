@@ -2,6 +2,7 @@
 var ajax = require('../../lib/jquery/ajax'),
     hapi = require('hapi'),
     Catbox = require('catbox'),
+    CatboxMemory = require('catbox-memory'),
     Exec = require('../../lib/exec'),
     sinon = require('sinon');
 
@@ -96,7 +97,7 @@ describe('ajax', function() {
           expiresIn: 5000
       };
 
-      var client = new Catbox.Client('catbox-memory');
+      var client = new Catbox.Client(CatboxMemory);
       client.start(function () {
           policy = new Catbox.Policy(policyOptions, client, 'example');
           done();
@@ -957,7 +958,7 @@ describe('ajax', function() {
     });
 
     it('should report cache errors but succeed', function(done) {
-      var client = new Catbox.Client('catbox-memory'),
+      var client = new Catbox.Client(CatboxMemory),
           err = new Error('puke');
       client.get = function(key, callback) {
         callback(err);
