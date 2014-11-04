@@ -2,7 +2,13 @@
 
 ## Development
 
-[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.15.0...master)
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.15.1...master)
+
+## v0.15.1 - November 3rd, 2014
+- [#51](https://github.com/walmartlabs/fruit-loops/issues/51) - Drop short async pending tasks from tasklog ([@kpdecker](https://api.github.com/users/kpdecker))
+- Pass catbox-memory object to tests - 781f784
+
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.15.0...v0.15.1)
 
 ## v0.15.0 - October 14th, 2014
 - Expose hrtime to client space - 632d479
