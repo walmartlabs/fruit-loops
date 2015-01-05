@@ -21,13 +21,23 @@ describe('dom.console', function() {
         });
       });
 
-      it('should pass all args', function() {
+      it('should printf', function() {
         _console(window, Exec.create());
         window.console[name]('foo', 1, 'bar');
 
         console[name].should.have.been.calledOnce;
         console[name].should.have.been.calledOn(console);
-        console[name].should.have.been.calledWith('id_42', 1, 'foo', 1, 'bar');
+        console[name].should.have.been.calledWith('%s %s foo', 'id_42', '1.000000', 1, 'bar');
+      });
+      it('should pass all args', function() {
+        var obj = {};
+
+        _console(window, Exec.create());
+        window.console[name]({}, 1, 'bar');
+
+        console[name].should.have.been.calledOnce;
+        console[name].should.have.been.calledOn(console);
+        console[name].should.have.been.calledWith('id_42', '1.000000', obj, 1, 'bar');
       });
     });
   });
