@@ -2,7 +2,16 @@
 
 ## Development
 
-[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.15.1...master)
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.16.0...master)
+
+## v0.16.0 - January 5th, 2015
+- [#52](https://github.com/walmartlabs/fruit-loops/pull/52) - Make ajax cache work with catbox 4.x ([@Candid](https://api.github.com/users/Candid))
+- Fix printf logging support - af13d90
+- Allow for missing callback in script exec - e47787a
+- Expose rewriteStack API - 988afe2
+- Avoid tokenizing URLs in stack parser - 1eb3ec0
+
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.15.1...v0.16.0)
 
 ## v0.15.1 - November 3rd, 2014
 - [#51](https://github.com/walmartlabs/fruit-loops/issues/51) - Drop short async pending tasks from tasklog ([@kpdecker](https://api.github.com/users/kpdecker))
