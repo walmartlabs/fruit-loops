@@ -2,7 +2,12 @@
 
 ## Development
 
-[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.16.0...master)
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.16.1...master)
+
+## v0.16.1 - May 14th, 2015
+- [#58](https://github.com/walmartlabs/fruit-loops/pull/58) - Change generateFunc to satisfy catbox 3.x API. ([@Candid](https://api.github.com/users/Candid))
+
+[Commits](https://github.com/walmartlabs/fruit-loops/compare/v0.16.0...v0.16.1)
 
 ## v0.16.0 - January 5th, 2015
 - [#52](https://github.com/walmartlabs/fruit-loops/pull/52) - Make ajax cache work with catbox 4.x ([@Candid](https://api.github.com/users/Candid))
