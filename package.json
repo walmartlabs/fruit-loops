@@ -18,7 +18,7 @@
     "async": "~0.2.9",
     "cheerio": "git+https://github.com/kpdecker/cheerio.git",
     "contextify": "~0.1.6",
-    "lodash": "~2.4.1",
+    "lodash": "~4.17.5",
     "nipple": "~2.2.0",
     "printf": "~0.1.1",
     "request": "~2.14.0",
