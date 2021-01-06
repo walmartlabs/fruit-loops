@@ -1,3 +1,11 @@
+***
+# NOTICE:
+
+## This repository has been archived and is not supported.
+
+[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
+***
+
 # Fruit Loops
 
 Provides a performant jQuery-like environment for rendering of client-side SPA application within node servers.
